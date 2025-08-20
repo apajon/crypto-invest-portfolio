@@ -1,0 +1,51 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "v5.0.0"
+    hooks:
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-toml
+      - id: check-yaml
+      - id: check-json
+        exclude: ^.devcontainer/devcontainer.json
+      - id: pretty-format-json
+        exclude: ^.devcontainer/devcontainer.json
+        args: [--autofix, --no-sort-keys]
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/psf/black
+    rev: "24.1.1"
+    hooks:
+      - id: black
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: "v0.12.7"
+    hooks:
+      - id: ruff-check
+        args: [ --exit-non-zero-on-fix ]
+      - id: ruff-format
+
+- repo: https://github.com/pre-commit/mirrors-mypy
+    rev: "v1.8.0"
+    hooks:
+      - id: mypy
+
+# Example of local hooks for custom scripts (disabled by default)
+# Uncomment the following section to enable custom hooks:
+#
+# - repo: local
+#   hooks:
+#     - id: custom-bash-script
+#       name: Custom Bash Script
+#       entry: ./scripts/myscript.sh
+#       language: system
+#       files: \.py$
+#       # pass_filenames: false  # Uncomment if script doesn't need filenames
+#
+#     - id: custom-python-script
+#       name: Custom Python Script
+#       entry: python ./scripts/myscript.py
+#       language: python
+#       files: \.py$
+#       # pass_filenames: false  # Uncomment if script doesn't need filenames

@@ -1,6 +1,5 @@
 """Tests for the refactored modules."""
 
-
 from crypto_invest_portfolio.constants.enums import CancelCommand, CoinType, Language
 from crypto_invest_portfolio.i18n import get_current_language, get_text, set_language
 from crypto_invest_portfolio.ui.input_helpers import is_cancel

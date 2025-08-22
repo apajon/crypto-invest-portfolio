@@ -116,7 +116,7 @@ def _handle_language_selection():
         print(get_text("cancelled"))
 
 
-def main_menu():
+def main_menu() -> None:
     """Main menu of the application (CLI interface).
 
     Presents an interactive menu to manage a crypto portfolio and orchestrates
@@ -142,12 +142,6 @@ def main_menu():
         11) Settings
         12) Quit
 
-    Args:
-        None
-
-    Returns:
-        None: Returns nothing. Function ends when user chooses to quit the menu.
-
     Side effects:
         - Creates/opens SQLite file ``crypto_portfolio.db``.
         - Reads/writes to ``portfolio`` and ``history`` tables.
@@ -160,19 +154,21 @@ def main_menu():
         - In auto-update mode (option 6), ``Ctrl+C`` cleanly interrupts
           the loop and returns to menu without quitting the application.
 
-    Exceptions:
-        - Specific exceptions are handled within sub-functions.
-        - A ``KeyboardInterrupt`` is caught during auto-update and does not
-          propagate above this loop.
-
     Notes:
         - Auto-update uses the portfolio state loaded at the time of
           launching the option; if database content changes during the
           loop, restart the option to reload data.
         - Network access is required to retrieve current prices.
+        - Specific exceptions are handled within sub-functions.
+        - A ``KeyboardInterrupt`` is caught during auto-update and does not
+          propagate above this loop.
 
     Examples:
         Run from project root with Poetry::
+
+            poetry run python -m crypto_invest_portfolio.main
+
+        Or directly with Python::
 
             poetry run python -m crypto_invest_portfolio.main
 

@@ -9,10 +9,10 @@ class UserCancel(Exception):
 
 def is_cancel(s: str) -> bool:
     """Check if input requests cancellation.
-    
+
     Args:
         s: Input string to check
-        
+
     Returns:
         True if the input is a cancel command
     """
@@ -22,13 +22,13 @@ def is_cancel(s: str) -> bool:
 
 def input_with_cancel(prompt: str) -> str:
     """Read input and raise UserCancel if user cancels.
-    
+
     Args:
         prompt: Prompt to display
-        
+
     Returns:
         The input string
-        
+
     Raises:
         UserCancel: If user enters a cancel command
     """
@@ -45,10 +45,10 @@ def input_with_default(prompt: str, default, caster):
         prompt: Prompt to display
         default: Default value if input is empty
         caster: Function to cast the input value
-        
+
     Returns:
         The cast value or default
-        
+
     Raises:
         UserCancel: If user enters a cancel command
     """

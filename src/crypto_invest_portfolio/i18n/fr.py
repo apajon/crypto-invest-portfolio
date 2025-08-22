@@ -17,14 +17,14 @@ TRANSLATIONS = {
     "menu_quit": "Quitter",
     "menu_choice": "Choix : ",
     "menu_invalid": "Choix invalide, réessayez.",
-    
+
     # Settings menu
     "settings_title": "=== Paramètres ===",
     "settings_language": "Changer la langue",
     "settings_back": "Retour au menu principal",
     "language_selection": "Sélectionnez la langue :",
     "language_changed": "Langue changée vers : {}",
-    
+
     # Common messages
     "cancel_anytime": "(tapez 'q' pour annuler à tout moment)",
     "cancelled": "Annulé.",
@@ -38,7 +38,7 @@ TRANSLATIONS = {
     "goodbye": "Au revoir !",
     "empty_modify": "Laissez vide pour ne pas modifier. (ou 'q' pour annuler)",
     "cancelled_invalid": "Annulé ou valeur invalide.",
-    
+
     # Input prompts
     "coin_name": "Nom du coin : ",
     "coin_symbol": "Symbole : ",
@@ -51,7 +51,7 @@ TRANSLATIONS = {
     "interval_minutes": "Intervalle en minutes : ",
     "purchase_id": "ID de l'achat à modifier : ",
     "delete_id": "ID de l'achat à supprimer : ",
-    
+
     # Edit prompts
     "edit_coin_name": "Nom du coin [{}] : ",
     "edit_symbol": "Symbole [{}] : ",
@@ -61,7 +61,7 @@ TRANSLATIONS = {
     "edit_sell_fee": "Frais de vente (%) [{}] : ",
     "edit_type": "Type (classic/risk/stable) [{}] : ",
     "edit_wallet": "Wallet [{}] : ",
-    
+
     # Auto-update messages
     "auto_update_stop": "Appuyez Ctrl+C pour arrêter l'auto-update.",
     "auto_update_stopped": "🔹 Auto-update arrêté. Retour au menu.",

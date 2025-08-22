@@ -2,17 +2,15 @@
 
 import time
 
+from .analysis import _view_portfolio, analyze_portfolio, plot_coin_history
 from .constants.enums import Language
 from .database import init_db
-from .i18n import get_text, set_language, get_current_language, get_supported_languages
-from .portfolio import add_purchase, edit_purchase, delete_purchase, add_staking_gain, load_portfolio
-from .ui import input_with_cancel, UserCancel
+from .i18n import get_current_language, get_supported_languages, get_text, set_language
 
-# Import the original analysis functions for now - will refactor later
-from .main_original import (
-    analyze_portfolio, plot_coin_history, _handle_wallet_menu,
-    _handle_view_portfolio_one_wallet, _view_portfolio
-)
+# Import remaining functions from original that aren't yet refactored
+from .main_original import _handle_view_portfolio_one_wallet, _handle_wallet_menu
+from .portfolio import add_purchase, add_staking_gain, delete_purchase, edit_purchase, load_portfolio
+from .ui import UserCancel
 
 
 def _handle_add():
@@ -82,9 +80,9 @@ def _handle_settings():
         print(f"\\n{get_text('settings_title')}")
         print(f"1. {get_text('settings_language')}")
         print(f"2. {get_text('settings_back')}")
-        
+
         choice = input(get_text("menu_choice")).strip()
-        
+
         if choice == "1":
             _handle_language_selection()
         elif choice == "2":
@@ -99,12 +97,12 @@ def _handle_language_selection():
     print(f"\\n{get_text('language_selection')}")
     languages = get_supported_languages()
     current = get_current_language()
-    
+
     for i, lang in enumerate(languages, 1):
         marker = " (current)" if lang == current else ""
         lang_name = "Français" if lang == Language.FR else "English"
         print(f"{i}. {lang_name}{marker}")
-    
+
     try:
         choice = int(input(get_text("menu_choice")))
         if 1 <= choice <= len(languages):

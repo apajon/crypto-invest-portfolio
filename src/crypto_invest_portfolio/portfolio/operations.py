@@ -7,7 +7,7 @@ import pandas as pd
 from ..constants.config import DB_FILE
 from ..constants.enums import CoinType
 from ..i18n import get_text
-from ..ui import input_with_cancel, input_with_default, is_cancel, UserCancel
+from ..ui import UserCancel, input_with_cancel, input_with_default, is_cancel
 
 
 def add_purchase():
@@ -71,7 +71,7 @@ def add_purchase():
     except KeyboardInterrupt:
         print(get_text("cancelled_newline"))
         return
-    
+
     conn = sqlite3.connect(DB_FILE)
     c = conn.cursor()
     c.execute(

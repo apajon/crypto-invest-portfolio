@@ -1,6 +1,6 @@
 """Constants and enums for the crypto portfolio application."""
 
-from .enums import CoinType, CancelCommand, Language
 from .config import DB_FILE
+from .enums import CancelCommand, CoinType, Language
 
-__all__ = ["CoinType", "CancelCommand", "Language", "DB_FILE"]
+__all__ = ["DB_FILE", "CancelCommand", "CoinType", "Language"]

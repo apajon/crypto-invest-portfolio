@@ -1,14 +1,13 @@
 """Internationalization manager."""
 
 import json
-import os
 from pathlib import Path
 
 from ..constants.enums import Language
+from .en import TRANSLATIONS as EN_TRANSLATIONS
 
 # Import translation dictionaries
 from .fr import TRANSLATIONS as FR_TRANSLATIONS
-from .en import TRANSLATIONS as EN_TRANSLATIONS
 
 _TRANSLATIONS = {
     Language.FR: FR_TRANSLATIONS,
@@ -24,7 +23,7 @@ def _load_language_preference():
     global _current_language
     try:
         if _CONFIG_FILE.exists():
-            with open(_CONFIG_FILE, 'r') as f:
+            with open(_CONFIG_FILE) as f:
                 config = json.load(f)
                 lang = config.get("language", Language.FR)
                 if lang in _TRANSLATIONS:
@@ -47,18 +46,18 @@ def _save_language_preference():
 
 def get_text(key: str, *args) -> str:
     """Get translated text for the given key.
-    
+
     Args:
         key: Translation key
         *args: Format arguments for the text
-        
+
     Returns:
         Translated and formatted text
     """
     global _current_language
     translations = _TRANSLATIONS.get(_current_language, _TRANSLATIONS[Language.FR])
     text = translations.get(key, key)  # Fallback to key if not found
-    
+
     if args:
         try:
             return text.format(*args)
@@ -69,7 +68,7 @@ def get_text(key: str, *args) -> str:
 
 def set_language(language: Language):
     """Set the current language.
-    
+
     Args:
         language: Language to set
     """

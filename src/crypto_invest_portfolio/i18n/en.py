@@ -17,14 +17,14 @@ TRANSLATIONS = {
     "menu_quit": "Quit",
     "menu_choice": "Choice: ",
     "menu_invalid": "Invalid choice, please try again.",
-    
+
     # Settings menu
     "settings_title": "=== Settings ===",
     "settings_language": "Change language",
     "settings_back": "Back to main menu",
     "language_selection": "Select language:",
     "language_changed": "Language changed to: {}",
-    
+
     # Common messages
     "cancel_anytime": "(type 'q' to cancel anytime)",
     "cancelled": "Cancelled.",
@@ -38,7 +38,7 @@ TRANSLATIONS = {
     "goodbye": "Goodbye!",
     "empty_modify": "Leave empty to keep unchanged. (or 'q' to cancel)",
     "cancelled_invalid": "Cancelled or invalid value.",
-    
+
     # Input prompts
     "coin_name": "Coin name: ",
     "coin_symbol": "Symbol: ",
@@ -51,7 +51,7 @@ TRANSLATIONS = {
     "interval_minutes": "Interval in minutes: ",
     "purchase_id": "ID of purchase to modify: ",
     "delete_id": "ID of purchase to delete: ",
-    
+
     # Edit prompts
     "edit_coin_name": "Coin name [{}]: ",
     "edit_symbol": "Symbol [{}]: ",
@@ -61,7 +61,7 @@ TRANSLATIONS = {
     "edit_sell_fee": "Sell fee (%) [{}]: ",
     "edit_type": "Type (classic/risk/stable) [{}]: ",
     "edit_wallet": "Wallet [{}]: ",
-    
+
     # Auto-update messages
     "auto_update_stop": "Press Ctrl+C to stop auto-update.",
     "auto_update_stopped": "🔹 Auto-update stopped. Back to menu.",

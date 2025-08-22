@@ -25,6 +25,30 @@ jobs:
       - name: Run checks
         run: make check
 
+      - name: Comment on PR if job fails
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `❌ CI failed sur le job \`${{ github.job }}\`. Consulte les logs pour plus d'infos.`
+            })
+
+      - name: Comment on PR if job succeeds
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ CI OK sur le job \`${{ github.job }}\`.`
+            })
+
   tests-and-type-check:
     runs-on: ubuntu-latest
     strategy:
@@ -56,6 +80,30 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Comment on PR if job fails
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `❌ CI failed sur le job \`${{ github.job }}\` (Python ${{ matrix.python-version }}). Consulte les logs pour plus d'infos.`
+            })
+
+      - name: Comment on PR if job succeeds
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ CI OK sur le job \`${{ github.job }}\` (Python ${{ matrix.python-version }}).`
+            })
+
   check-docs:
     runs-on: ubuntu-latest
     steps:
@@ -67,3 +115,27 @@ jobs:
 
       - name: Check if documentation can be built
         run: poetry run mkdocs build -s
+
+      - name: Comment on PR if job fails
+        if: failure() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `❌ CI failed sur le job \`${{ github.job }}\` (build docs). Consulte les logs pour plus d'infos.`
+            })
+
+      - name: Comment on PR if job succeeds
+        if: success() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ CI OK sur le job \`${{ github.job }}\` (build docs).`
+            })

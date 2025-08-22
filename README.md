@@ -109,9 +109,12 @@ This project uses tbump for automated version management:
 ```bash
 # Bump version to 1.2.3 (automatically commits and tags)
 poetry run tbump 1.2.3
+./scripts/bump.sh patch           # bump patch
+./scripts/bump.sh minor --push     # bump minor + push
 
 # Dry run to see what would happen
 poetry run tbump --dry-run 1.2.3
+./scripts/bump.sh major --dry-run  # dry-run d’un bump major
 
 # Simple version bump with Poetry (no commit/tag)
 poetry version patch|minor|major

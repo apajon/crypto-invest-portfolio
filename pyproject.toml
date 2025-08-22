@@ -18,6 +18,9 @@ pandas = "^2.3.1"
 python = "^3.12"
 requests = "^2.32.5"
 
+[tool.poetry.scripts]
+crypto-portfolio = "crypto_invest_portfolio.CLI_portfolio_app:main_menu"
+
 [tool.poetry.group.dev.dependencies]
 black = ">=23.0.0"
 deptry = ">=0.23.0"

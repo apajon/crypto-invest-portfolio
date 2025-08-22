@@ -32,5 +32,12 @@
     "**/.ruff_cache": true,
     "**/dist": true,
     "**/*.egg-info": true
+  },
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.ruff": "explicit",
+      "source.organizeImports.ruff": "explicit"
+    },
+    "editor.defaultFormatter": "ms-python.black-formatter"
   }
 }

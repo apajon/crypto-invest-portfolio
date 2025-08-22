@@ -1,10 +1,9 @@
 """Tests for the refactored modules."""
 
-import pytest
 
-from crypto_invest_portfolio.constants.enums import CoinType, CancelCommand, Language
+from crypto_invest_portfolio.constants.enums import CancelCommand, CoinType, Language
+from crypto_invest_portfolio.i18n import get_current_language, get_text, set_language
 from crypto_invest_portfolio.ui.input_helpers import is_cancel
-from crypto_invest_portfolio.i18n import get_text, set_language, get_current_language
 
 
 def test_coin_type_enum():
@@ -36,14 +35,14 @@ def test_i18n_system():
     original_lang = get_current_language()
     set_language(Language.FR)
     assert get_text("menu_quit") == "Quitter"
-    
+
     # Test English
     set_language(Language.EN)
     assert get_text("menu_quit") == "Quit"
-    
+
     # Test with formatting
     assert get_text("success_purchase_added", "BTC", 0.1, 50000) == "✅ Purchase added: BTC (0.1 @ 50000 CAD)"
-    
+
     # Restore original language
     set_language(original_lang)
 
@@ -51,13 +50,13 @@ def test_i18n_system():
 def test_language_persistence():
     """Test that language preference is saved."""
     original_lang = get_current_language()
-    
+
     # Change language
     new_lang = Language.EN if original_lang == Language.FR else Language.FR
     set_language(new_lang)
-    
+
     # Verify change took effect
     assert get_current_language() == new_lang
-    
+
     # Restore original
     set_language(original_lang)

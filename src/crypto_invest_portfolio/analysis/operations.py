@@ -309,13 +309,24 @@ def analyze_portfolio(df, *, by_wallet: bool = False):
 
     if by_wallet:
         cols = [
-            "Wallet", "Coin", "Amount", "Avg Buy Price CAD", "Current Price CAD",
-            "Invested Value CAD (incl. frais)", "Current Value CAD (net)", "% Change Net"
+            "Wallet",
+            "Coin",
+            "Amount",
+            "Avg Buy Price CAD",
+            "Current Price CAD",
+            "Invested Value CAD (incl. frais)",
+            "Current Value CAD (net)",
+            "% Change Net",
         ]
     else:
         cols = [
-            "Coin", "Amount", "Avg Buy Price CAD", "Current Price CAD",
-            "Invested Value CAD (incl. frais)", "Current Value CAD (net)", "% Change Net"
+            "Coin",
+            "Amount",
+            "Avg Buy Price CAD",
+            "Current Price CAD",
+            "Invested Value CAD (incl. frais)",
+            "Current Value CAD (net)",
+            "% Change Net",
         ]
 
     # Restrict to available columns to avoid KeyError
@@ -365,7 +376,7 @@ def plot_coin_history():
             coin_data["timestamp"] = pd.to_datetime(coin_data["timestamp"])
 
             plt.figure(figsize=(12, 6))
-            plt.plot(coin_data["timestamp"], coin_data["current_value_net_cad"], marker='o')
+            plt.plot(coin_data["timestamp"], coin_data["current_value_net_cad"], marker="o")
             plt.title(f"Net Value Evolution - {chosen_coin}")
             plt.xlabel("Date")
             plt.ylabel("Net Value (CAD)")

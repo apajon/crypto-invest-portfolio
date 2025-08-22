@@ -1,6 +1,7 @@
 """Internationalization manager."""
 
 import json
+import logging
 from pathlib import Path
 
 from ..constants.enums import Language
@@ -8,6 +9,8 @@ from .en import TRANSLATIONS as EN_TRANSLATIONS
 
 # Import translation dictionaries
 from .fr import TRANSLATIONS as FR_TRANSLATIONS
+
+logger = logging.getLogger(__name__)
 
 _TRANSLATIONS = {
     Language.FR: FR_TRANSLATIONS,
@@ -37,11 +40,11 @@ def _save_language_preference():
     """Save current language preference."""
     try:
         _CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
-        with open(_CONFIG_FILE, 'w') as f:
+        with open(_CONFIG_FILE, "w") as f:
             json.dump({"language": _current_language}, f)
-    except Exception:
-        # Silently fail if we can't save preferences
-        pass
+    except Exception as e:
+        # Log the exception instead of silently failing
+        logger.warning("Failed to save language preference: %s", e)
 
 
 def get_text(key: str, *args) -> str:

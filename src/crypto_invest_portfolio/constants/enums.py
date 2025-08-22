@@ -5,6 +5,7 @@ from enum import StrEnum
 
 class CoinType(StrEnum):
     """Types of coins for risk categorization."""
+
     CLASSIC = "classic"
     RISK = "risk"
     STABLE = "stable"
@@ -12,6 +13,7 @@ class CoinType(StrEnum):
 
 class CancelCommand(StrEnum):
     """Commands that trigger cancellation."""
+
     Q = "q"
     QUIT = "quit"
     CANCEL = "cancel"
@@ -21,5 +23,6 @@ class CancelCommand(StrEnum):
 
 class Language(StrEnum):
     """Supported languages."""
+
     FR = "fr"
     EN = "en"

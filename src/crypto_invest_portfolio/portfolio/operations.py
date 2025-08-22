@@ -10,6 +10,50 @@ from ..i18n import get_text
 from ..ui import UserCancel, input_with_cancel, input_with_default, is_cancel
 
 
+def _get_user_input_with_cancel(prompt_key: str) -> str:
+    """Get user input with cancellation support.
+
+    Args:
+        prompt_key: Translation key for the prompt
+
+    Returns:
+        User input string
+
+    Raises:
+        UserCancel: If user cancels
+    """
+    value = input(get_text(prompt_key)).strip()
+    if is_cancel(value):
+        raise UserCancel()
+    return value
+
+
+def _get_purchase_inputs() -> tuple[str, str, float, float, float, float, str, str]:
+    """Get all purchase inputs from user.
+
+    Returns:
+        Tuple of (coin, symbol, amount, buy_price_cad, fee_buy_percent, fee_sell_percent, type_, wallet)
+
+    Raises:
+        UserCancel: If user cancels
+    """
+    coin = _get_user_input_with_cancel("coin_name")
+    symbol = _get_user_input_with_cancel("coin_symbol")
+    amount = float(_get_user_input_with_cancel("amount"))
+    buy_price_cad = float(_get_user_input_with_cancel("buy_price_cad"))
+    fee_buy_percent = float(_get_user_input_with_cancel("buy_fee_percent"))
+    fee_sell_percent = float(_get_user_input_with_cancel("sell_fee_percent"))
+
+    type_ = _get_user_input_with_cancel("coin_type").lower()
+    # Validate coin type
+    if type_ not in [t.value for t in CoinType]:
+        type_ = CoinType.CLASSIC.value  # Default fallback
+
+    wallet = _get_user_input_with_cancel("wallet")
+
+    return coin, symbol, amount, buy_price_cad, fee_buy_percent, fee_sell_percent, type_, wallet
+
+
 def add_purchase():
     """Add a purchase to the portfolio via user input.
 
@@ -29,47 +73,10 @@ def add_purchase():
     """
     print(get_text("cancel_anytime"))
     try:
-        coin = input(get_text("coin_name")).strip()
-        if is_cancel(coin):
-            print(get_text("cancelled"))
-            return
-        symbol = input(get_text("coin_symbol")).strip()
-        if is_cancel(symbol):
-            print(get_text("cancelled"))
-            return
-        amount_s = input(get_text("amount")).strip()
-        if is_cancel(amount_s):
-            print(get_text("cancelled"))
-            return
-        amount = float(amount_s)
-        buy_price_s = input(get_text("buy_price_cad")).strip()
-        if is_cancel(buy_price_s):
-            print(get_text("cancelled"))
-            return
-        buy_price_cad = float(buy_price_s)
-        fee_buy_s = input(get_text("buy_fee_percent")).strip()
-        if is_cancel(fee_buy_s):
-            print(get_text("cancelled"))
-            return
-        fee_buy_percent = float(fee_buy_s)
-        fee_sell_s = input(get_text("sell_fee_percent")).strip()
-        if is_cancel(fee_sell_s):
-            print(get_text("cancelled"))
-            return
-        fee_sell_percent = float(fee_sell_s)
-        type_ = input(get_text("coin_type")).strip().lower()
-        if is_cancel(type_):
-            print(get_text("cancelled"))
-            return
-        # Validate coin type
-        if type_ not in [t.value for t in CoinType]:
-            type_ = CoinType.CLASSIC.value  # Default fallback
-        wallet = input(get_text("wallet")).strip()
-        if is_cancel(wallet):
-            print(get_text("cancelled"))
-            return
-    except KeyboardInterrupt:
-        print(get_text("cancelled_newline"))
+        purchase_data = _get_purchase_inputs()
+        coin, symbol, amount, buy_price_cad, fee_buy_percent, fee_sell_percent, type_, wallet = purchase_data
+    except (UserCancel, KeyboardInterrupt):
+        print(get_text("cancelled"))
         return
 
     conn = sqlite3.connect(DB_FILE)

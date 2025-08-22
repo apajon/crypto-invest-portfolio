@@ -128,14 +128,17 @@ regex = '''
   (?P<patch>\d+)
   '''
 
-[tool.tbump.git]
-message_template = "Bump to {new_version}"
-tag_template = "v{new_version}"
-push = true
-
 [[tool.tbump.file]]
 src = "pyproject.toml"
 search = 'version = "{current_version}"'
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "v{new_version}"
+
+[[tool.tbump.after_push]]
+name = "push-follow-tags"
+cmd = "git push --follow-tags"
 
 [tool.coverage.report]
 skip_empty = true
@@ -143,4 +146,3 @@ skip_empty = true
 [tool.coverage.run]
 branch = true
 source = ["src"]
-

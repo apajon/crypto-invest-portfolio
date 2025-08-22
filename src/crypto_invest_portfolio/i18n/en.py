@@ -1,0 +1,71 @@
+"""English translations."""
+
+TRANSLATIONS = {
+    # Menu items
+    "menu_title": "=== Crypto Portfolio Tracker ===",
+    "menu_add_purchase": "Add a purchase",
+    "menu_add_staking": "Add a gain (staking)",
+    "menu_edit_purchase": "Edit an existing purchase",
+    "menu_delete_purchase": "Delete a purchase",
+    "menu_analyze_once": "Analyze portfolio once",
+    "menu_auto_update": "Auto-update every X minutes",
+    "menu_view_portfolio": "View portfolio (purchases)",
+    "menu_view_wallet": "View portfolio of a wallet",
+    "menu_plot_coin": "View coin evolution",
+    "menu_wallet_analysis": "Wallet analysis ➜",
+    "menu_settings": "Settings",
+    "menu_quit": "Quit",
+    "menu_choice": "Choice: ",
+    "menu_invalid": "Invalid choice, please try again.",
+    
+    # Settings menu
+    "settings_title": "=== Settings ===",
+    "settings_language": "Change language",
+    "settings_back": "Back to main menu",
+    "language_selection": "Select language:",
+    "language_changed": "Language changed to: {}",
+    
+    # Common messages
+    "cancel_anytime": "(type 'q' to cancel anytime)",
+    "cancelled": "Cancelled.",
+    "cancelled_newline": "\\nCancelled.",
+    "invalid_id": "Invalid ID.",
+    "empty_portfolio": "Empty portfolio. No purchase to modify.",
+    "success_purchase_added": "✅ Purchase added: {} ({} @ {} CAD)",
+    "success_staking_added": "✅ Staking gain added: {} (+{})",
+    "success_purchase_modified": "✅ Purchase modified successfully.",
+    "success_purchase_deleted": "✅ Purchase deleted.",
+    "goodbye": "Goodbye!",
+    "empty_modify": "Leave empty to keep unchanged. (or 'q' to cancel)",
+    "cancelled_invalid": "Cancelled or invalid value.",
+    
+    # Input prompts
+    "coin_name": "Coin name: ",
+    "coin_symbol": "Symbol: ",
+    "amount": "Amount: ",
+    "buy_price_cad": "Buy price CAD: ",
+    "buy_fee_percent": "Buy fee (%): ",
+    "sell_fee_percent": "Sell fee (%): ",
+    "coin_type": "Type (classic/risk/stable): ",
+    "wallet": "Wallet: ",
+    "interval_minutes": "Interval in minutes: ",
+    "purchase_id": "ID of purchase to modify: ",
+    "delete_id": "ID of purchase to delete: ",
+    
+    # Edit prompts
+    "edit_coin_name": "Coin name [{}]: ",
+    "edit_symbol": "Symbol [{}]: ",
+    "edit_amount": "Amount [{}]: ",
+    "edit_buy_price": "Buy price CAD [{}]: ",
+    "edit_buy_fee": "Buy fee (%) [{}]: ",
+    "edit_sell_fee": "Sell fee (%) [{}]: ",
+    "edit_type": "Type (classic/risk/stable) [{}]: ",
+    "edit_wallet": "Wallet [{}]: ",
+    
+    # Auto-update messages
+    "auto_update_stop": "Press Ctrl+C to stop auto-update.",
+    "auto_update_stopped": "🔹 Auto-update stopped. Back to menu.",
+    "auto_update_wallet_stopped": "🔹 Auto-update (selected wallet) stopped. Back to menu.",
+    "empty_before_auto": "Empty portfolio. Add purchases before auto-update.",
+    "empty_for_analysis": "Empty portfolio. Add purchases.",
+}

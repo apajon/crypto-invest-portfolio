@@ -15,7 +15,6 @@ def setup_page_config():
         page_title="Crypto Portfolio Tracker",
         page_icon="💰",
         layout="wide",
-        initial_sidebar_state="expanded",
     )
 
 
@@ -23,15 +22,13 @@ def initialize_session_state():
     """Initialize Streamlit session state variables."""
     if "language" not in st.session_state:
         st.session_state.language = get_current_language()
-    if "page" not in st.session_state:
-        st.session_state.page = "portfolio"
 
 
-def create_sidebar_navigation():
-    """Create sidebar navigation menu."""
+def create_language_selector():
+    """Create language selector in sidebar."""
     with st.sidebar:
         st.title("🚀 " + get_text("menu_title"))
-
+        
         # Language selector
         languages = get_supported_languages()
         language_codes = [lang.value for lang in languages]
@@ -53,52 +50,40 @@ def create_sidebar_navigation():
             st.session_state.language = current_lang
             st.rerun()
 
-        st.divider()
 
-        # Navigation menu
-        menu_options = {
-            "portfolio": "📊 " + get_text("menu_view_portfolio"),
-            "add_purchase": "➕ " + get_text("menu_add_purchase"),
-            "add_staking": "🎯 " + get_text("menu_add_staking"),
-            "edit_delete": "✏️ " + get_text("menu_edit_purchase") + " / " + get_text("menu_delete_purchase"),
-            "analysis": "📈 " + get_text("menu_analyze_once"),
-            "visualization": "📉 " + get_text("menu_plot_coin"),
-            "settings": "⚙️ " + get_text("menu_settings"),
-        }
-
-        selected_page = st.radio(
-            "Navigation",
-            options=list(menu_options.keys()),
-            format_func=lambda x: menu_options[x],
-            index=list(menu_options.keys()).index(st.session_state.page) if st.session_state.page in menu_options else 0,
-            label_visibility="collapsed"
-        )
-
-        if selected_page != st.session_state.page:
-            st.session_state.page = selected_page
-            st.rerun()
+def portfolio_page():
+    """Portfolio overview page."""
+    portfolio_operations.show_portfolio_view()
 
 
-def render_main_content():
-    """Render the main content area based on selected page."""
-    page = st.session_state.page
+def add_purchase_page():
+    """Add purchase page."""
+    portfolio_operations.show_add_purchase()
 
-    if page == "portfolio":
-        portfolio_operations.show_portfolio_view()
-    elif page == "add_purchase":
-        portfolio_operations.show_add_purchase()
-    elif page == "add_staking":
-        portfolio_operations.show_add_staking()
-    elif page == "edit_delete":
-        portfolio_operations.show_edit_delete()
-    elif page == "analysis":
-        analysis.show_analysis()
-    elif page == "visualization":
-        visualization.show_visualization()
-    elif page == "settings":
-        settings.show_settings()
-    else:
-        st.error(f"Unknown page: {page}")
+
+def add_staking_page():
+    """Add staking page."""
+    portfolio_operations.show_add_staking()
+
+
+def edit_delete_page():
+    """Edit/Delete operations page."""
+    portfolio_operations.show_edit_delete()
+
+
+def analysis_page():
+    """Analysis page."""
+    analysis.show_analysis()
+
+
+def visualization_page():
+    """Visualization page."""
+    visualization.show_visualization()
+
+
+def settings_page():
+    """Settings page."""
+    settings.show_settings()
 
 
 def main():
@@ -109,9 +94,23 @@ def main():
     # Initialize database
     init_db()
 
-    # Create layout
-    create_sidebar_navigation()
-    render_main_content()
+    # Create language selector in sidebar
+    create_language_selector()
+
+    # Define pages using st.Page
+    pages = [
+        st.Page(portfolio_page, title="📊 " + get_text("menu_view_portfolio"), default=True),
+        st.Page(add_purchase_page, title="➕ " + get_text("menu_add_purchase")),
+        st.Page(add_staking_page, title="🎯 " + get_text("menu_add_staking")),
+        st.Page(edit_delete_page, title="✏️ " + get_text("menu_edit_purchase") + " / " + get_text("menu_delete_purchase")),
+        st.Page(analysis_page, title="📈 " + get_text("menu_analyze_once")),
+        st.Page(visualization_page, title="📉 " + get_text("menu_plot_coin")),
+        st.Page(settings_page, title="⚙️ " + get_text("menu_settings")),
+    ]
+
+    # Create navigation
+    pg = st.navigation(pages)
+    pg.run()
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ streamlit = "^1.42.0"
 
 [tool.poetry.scripts]
 crypto-portfolio = "crypto_invest_portfolio.CLI_portfolio_app:main_menu"
-crypto-portfolio-gui = "crypto_invest_portfolio.streamlit_gui.main:main"
+crypto-portfolio-gui = "crypto_invest_portfolio.streamlit_gui.app:main"
 
 [tool.poetry.group.dev.dependencies]
 black = ">=23.0.0"

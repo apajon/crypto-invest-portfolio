@@ -5,8 +5,8 @@ import sqlite3
 
 import streamlit as st
 
-from ...constants.config import DB_FILE
-from ...i18n import get_current_language, get_supported_languages, get_text, set_language
+from crypto_invest_portfolio.constants.config import DB_FILE
+from crypto_invest_portfolio.i18n import get_current_language, get_supported_languages, get_text, set_language
 
 
 def show_settings():
@@ -32,6 +32,7 @@ def show_language_settings():
     st.subheader("🌐 " + get_text("settings_language"))
 
     languages = get_supported_languages()
+    language_codes = [lang.value for lang in languages]
     current_lang = get_current_language()
 
     language_names = {
@@ -46,9 +47,9 @@ def show_language_settings():
 
         new_language = st.selectbox(
             "Select Language:",
-            options=list(languages.keys()),
+            options=language_codes,
             format_func=lambda x: language_names.get(x, x),
-            index=list(languages.keys()).index(current_lang),
+            index=language_codes.index(current_lang) if current_lang in language_codes else 0,
             key="settings_language_selector"
         )
 
@@ -64,7 +65,7 @@ def show_language_settings():
     with col2:
         st.write("**Available Languages:**")
         for lang_code, lang_name in language_names.items():
-            if lang_code in languages:
+            if lang_code in language_codes:
                 status = "✅ Current" if lang_code == current_lang else "⚪ Available"
                 st.write(f"{status} {lang_name}")
 

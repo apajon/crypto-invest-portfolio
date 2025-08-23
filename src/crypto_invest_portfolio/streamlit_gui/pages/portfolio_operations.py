@@ -4,10 +4,10 @@ import sqlite3
 
 import streamlit as st
 
-from ...constants.config import DB_FILE
-from ...constants.enums import CoinType
-from ...i18n import get_text
-from ...portfolio import load_portfolio
+from crypto_invest_portfolio.constants.config import DB_FILE
+from crypto_invest_portfolio.constants.enums import CoinType
+from crypto_invest_portfolio.i18n import get_text
+from crypto_invest_portfolio.portfolio import load_portfolio
 
 
 def show_portfolio_view():

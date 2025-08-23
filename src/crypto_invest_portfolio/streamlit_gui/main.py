@@ -2,9 +2,11 @@
 
 import streamlit as st
 
-from ..database import init_db
-from ..i18n import get_current_language, get_supported_languages, get_text, set_language
-from .pages import analysis, portfolio_operations, settings, visualization
+from crypto_invest_portfolio.analysis import analyze_portfolio, plot_coin_history
+from crypto_invest_portfolio.database import init_db
+from crypto_invest_portfolio.i18n import get_current_language, get_supported_languages, get_text, set_language
+from crypto_invest_portfolio.portfolio import load_portfolio
+from crypto_invest_portfolio.streamlit_gui.pages import analysis, portfolio_operations, settings, visualization
 
 
 def setup_page_config():
@@ -32,6 +34,7 @@ def create_sidebar_navigation():
 
         # Language selector
         languages = get_supported_languages()
+        language_codes = [lang.value for lang in languages]
         language_names = {
             "en": "🇺🇸 English",
             "fr": "🇫🇷 Français"
@@ -39,9 +42,9 @@ def create_sidebar_navigation():
 
         current_lang = st.selectbox(
             "🌐 Language",
-            options=list(languages.keys()),
+            options=language_codes,
             format_func=lambda x: language_names.get(x, x),
-            index=list(languages.keys()).index(st.session_state.language),
+            index=language_codes.index(st.session_state.language) if st.session_state.language in language_codes else 0,
             key="language_selector"
         )
 

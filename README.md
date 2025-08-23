@@ -6,28 +6,144 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/apajon/crypto-invest-portfolio)](https://img.shields.io/github/commit-activity/m/apajon/crypto-invest-portfolio)
 [![License](https://img.shields.io/github/license/apajon/crypto-invest-portfolio)](https://img.shields.io/github/license/apajon/crypto-invest-portfolio)
 
-This is a repository python project of a crypto investment portfolio.
+A comprehensive crypto investment portfolio management tool with both **CLI** and **Web GUI** interfaces. Track your cryptocurrency investments, analyze performance, and visualize your portfolio growth with multi-language support.
 
-- **Github repository**: <https://github.com/apajon/crypto-invest-portfolio/>
-- **Documentation** <https://apajon.github.io/crypto-invest-portfolio/>
+![Streamlit GUI Main Page](docs/screenshots/streamlit-gui-main-page.png)
 
-## Getting started with your project
+## ✨ Features
 
-### 1. Create a New Repository
+- 📊 **Portfolio Management**: Add, edit, and delete cryptocurrency purchases and staking gains
+- 📈 **Real-time Analysis**: Performance tracking with live price data from CoinGecko API
+- 📉 **Interactive Visualizations**: Charts and graphs for portfolio analysis
+- 🌐 **Multi-language Support**: English and French interfaces
+- 💰 **Wallet Organization**: Group investments by different wallets/exchanges
+- 🔄 **Auto-update**: Continuous monitoring with configurable intervals
+- 🗃️ **Data Export**: Portfolio data backup and export capabilities
+- 🖥️ **Dual Interfaces**: Choose between CLI and modern web GUI
 
-First, create a repository on GitHub with the same name as this project, and then run the following commands:
+## 🚀 Quick Start
+
+### Web GUI (Recommended)
+
+The easiest way to get started is with the modern Streamlit web interface:
 
 ```bash
-git init -b main
-git add .
-git commit -m "init commit"
-git remote add origin git@github.com:apajon/crypto-invest-portfolio.git
-git push -u origin main
+# Install dependencies
+poetry install
+
+# Launch the web GUI
+poetry run python scripts/run_gui.py
 ```
 
-### 2. Set Up Your Development Environment
+Or use the poetry script:
 
-Then, install the environment and the pre-commit hooks with
+```bash
+poetry run crypto-portfolio-gui
+```
+
+The application will open in your browser at `http://localhost:8501`.
+
+### Command Line Interface
+
+For terminal users, the traditional CLI is still available:
+
+```bash
+poetry run crypto-portfolio
+```
+
+## 📸 Screenshots
+
+### Main Portfolio View
+![Main Page](docs/screenshots/streamlit-gui-main-page.png)
+
+### Add Purchase Form
+![Add Purchase](docs/screenshots/streamlit-gui-add-purchase.png)
+
+### Settings & Configuration
+![Settings](docs/screenshots/streamlit-gui-settings.png)
+
+## 🛠️ Installation
+
+### Prerequisites
+
+- Python 3.12+
+- Poetry (for dependency management)
+
+### Setup
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/apajon/crypto-invest-portfolio.git
+   cd crypto-invest-portfolio
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   poetry install
+   ```
+
+3. **Run the application**:
+   
+   **Web GUI**:
+   ```bash
+   poetry run python scripts/run_gui.py
+   ```
+   
+   **CLI**:
+   ```bash
+   poetry run crypto-portfolio
+   ```
+
+## 📖 Usage
+
+### Web GUI Interface
+
+The Streamlit web interface provides:
+
+- **Portfolio Overview**: Dashboard with metrics and portfolio statistics
+- **Add Purchases**: User-friendly forms for recording investments
+- **Edit/Delete**: Manage existing portfolio entries
+- **Analysis**: Real-time performance analysis with visualizations
+- **Settings**: Language preferences and database management
+
+See the [Streamlit GUI Guide](docs/streamlit_gui_guide.md) for detailed usage instructions.
+
+### CLI Interface
+
+The command-line interface offers all the same functionality through an interactive menu:
+
+1. Add cryptocurrency purchases
+2. Add staking gains
+3. Edit existing purchases
+4. Delete purchases
+5. Analyze portfolio performance
+6. Auto-update with live prices
+7. View portfolio by wallet
+8. Plot coin price history
+9. Wallet-specific analysis
+10. Settings configuration
+
+## 🗃️ Data Storage
+
+- **Database**: SQLite (`data/db/crypto_portfolio.db`)
+- **Format**: Structured tables for portfolio and history
+- **Backup**: Export functionality available in both interfaces
+
+## 🌐 Multi-language Support
+
+Available languages:
+- 🇺🇸 **English**
+- 🇫🇷 **French**
+
+Switch languages through the sidebar (GUI) or settings menu (CLI).
+
+## 🔌 API Integration
+
+- **Price Data**: CoinGecko API for real-time cryptocurrency prices
+- **Rate Limiting**: Automatic request throttling to respect API limits
+- **Offline Mode**: Historical data available when API is unavailable
+
+## 🧪 Development
 
 ```bash
 make install

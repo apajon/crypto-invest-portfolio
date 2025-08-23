@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 
-from ...analysis import plot_coin_history
-from ...i18n import get_text
-from ...portfolio import load_portfolio
+from crypto_invest_portfolio.analysis import plot_coin_history
+from crypto_invest_portfolio.i18n import get_text
+from crypto_invest_portfolio.portfolio import load_portfolio
 
 
 def show_visualization():

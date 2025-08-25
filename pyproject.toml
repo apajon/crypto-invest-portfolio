@@ -17,7 +17,7 @@ matplotlib = "^3.10.5"
 pandas = "^2.3.1"
 python = "^3.12"
 requests = "^2.32.5"
-streamlit = "^1.30.0"
+streamlit = "^1.48.0"
 
 [tool.poetry.scripts]
 crypto-portfolio = "crypto_invest_portfolio.CLI_portfolio_app:main_menu"

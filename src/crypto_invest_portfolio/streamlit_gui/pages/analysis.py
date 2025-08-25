@@ -2,6 +2,7 @@
 
 import time
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 
@@ -203,7 +204,14 @@ def show_portfolio_summary(df: pd.DataFrame, by_wallet: bool = False):
             if 'type' in df.columns:
                 st.subheader("Portfolio by Type")
                 type_composition = df.groupby('type')['amount'].sum()
-                st.pie_chart(type_composition)
+                if len(type_composition) > 0:
+                    fig_type, ax_type = plt.subplots(figsize=(8, 6))
+                    ax_type.pie(type_composition.values, labels=type_composition.index, autopct='%1.1f%%')
+                    ax_type.set_title("Portfolio Distribution by Type")
+                    st.pyplot(fig_type)
+                    plt.close(fig_type)
+                else:
+                    st.info("No type data available for pie chart.")
 
     except Exception as e:
         st.error(f"Error creating portfolio summary: {e!s}")

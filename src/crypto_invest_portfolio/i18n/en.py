@@ -17,6 +17,13 @@ TRANSLATIONS = {
     "menu_quit": "Quit",
     "menu_choice": "Choice: ",
     "menu_invalid": "Invalid choice, please try again.",
+    # Streamlit Menu Sections
+    "streamlit_menu_home": "Home",
+    "streamlit_menu_add_edit": "Add / Edit",
+    "streamlit_menu_portfolio": "Portfolio",
+    "streamlit_menu_analysis": "Analysis",
+    "streamlit_menu_visualization": "Visualization",
+    "streamlit_menu_settings": "Settings",
     # Settings menu
     "settings_title": "=== Settings ===",
     "settings_language": "Change language",

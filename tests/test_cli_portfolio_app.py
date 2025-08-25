@@ -79,7 +79,9 @@ class TestHandlersWithLogic:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.load_portfolio")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_analyze_once_with_empty_portfolio(self, mock_print, mock_get_text, mock_load_portfolio, mock_analyze_portfolio):
+    def test_handle_analyze_once_with_empty_portfolio(
+        self, mock_print, mock_get_text, mock_load_portfolio, mock_analyze_portfolio
+    ):
         """Test _handle_analyze_once with empty portfolio."""
         # Setup empty dataframe
         empty_df = pd.DataFrame()
@@ -133,8 +135,15 @@ class TestLanguageSelection:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_current_language")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_language_selection_valid_choice(self, mock_print, mock_get_text, mock_get_current_language,
-                                                   mock_get_supported_languages, mock_set_language, mock_input):
+    def test_handle_language_selection_valid_choice(
+        self,
+        mock_print,
+        mock_get_text,
+        mock_get_current_language,
+        mock_get_supported_languages,
+        mock_set_language,
+        mock_input,
+    ):
         """Test language selection with valid choice."""
         # Setup
         mock_get_supported_languages.return_value = [Language.FR, Language.EN]
@@ -142,8 +151,8 @@ class TestLanguageSelection:
         mock_input.return_value = "2"  # Select English (second option)
         mock_get_text.side_effect = [
             "Select language:",  # language_selection
-            "Choice: ",          # menu_choice
-            "Language changed to English"  # language_changed
+            "Choice: ",  # menu_choice
+            "Language changed to English",  # language_changed
         ]
 
         _handle_language_selection()
@@ -156,8 +165,14 @@ class TestLanguageSelection:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_current_language")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_language_selection_invalid_choice(self, mock_print, mock_get_text, mock_get_current_language,
-                                                     mock_get_supported_languages, mock_input):
+    def test_handle_language_selection_invalid_choice(
+        self,
+        mock_print,
+        mock_get_text,
+        mock_get_current_language,
+        mock_get_supported_languages,
+        mock_input,
+    ):
         """Test language selection with invalid choice."""
         # Setup
         mock_get_supported_languages.return_value = [Language.FR, Language.EN]
@@ -165,8 +180,8 @@ class TestLanguageSelection:
         mock_input.return_value = "99"  # Invalid choice
         mock_get_text.side_effect = [
             "Select language:",  # language_selection
-            "Choice: ",          # menu_choice
-            "Invalid choice"     # menu_invalid
+            "Choice: ",  # menu_choice
+            "Invalid choice",  # menu_invalid
         ]
 
         _handle_language_selection()
@@ -178,8 +193,14 @@ class TestLanguageSelection:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_current_language")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_language_selection_value_error(self, mock_print, mock_get_text, mock_get_current_language,
-                                                  mock_get_supported_languages, mock_input):
+    def test_handle_language_selection_value_error(
+        self,
+        mock_print,
+        mock_get_text,
+        mock_get_current_language,
+        mock_get_supported_languages,
+        mock_input,
+    ):
         """Test language selection with non-numeric input."""
         # Setup
         mock_get_supported_languages.return_value = [Language.FR, Language.EN]
@@ -187,8 +208,8 @@ class TestLanguageSelection:
         mock_input.return_value = "invalid"  # Non-numeric input
         mock_get_text.side_effect = [
             "Select language:",  # language_selection
-            "Choice: ",          # menu_choice
-            "Cancelled"          # cancelled
+            "Choice: ",  # menu_choice
+            "Cancelled",  # cancelled
         ]
 
         _handle_language_selection()
@@ -200,8 +221,14 @@ class TestLanguageSelection:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_current_language")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_language_selection_user_cancel(self, mock_print, mock_get_text, mock_get_current_language,
-                                                   mock_get_supported_languages, mock_input):
+    def test_handle_language_selection_user_cancel(
+        self,
+        mock_print,
+        mock_get_text,
+        mock_get_current_language,
+        mock_get_supported_languages,
+        mock_input,
+    ):
         """Test language selection with UserCancel exception."""
         # Setup
         mock_get_supported_languages.return_value = [Language.FR, Language.EN]
@@ -209,8 +236,8 @@ class TestLanguageSelection:
         mock_input.side_effect = UserCancel()  # User cancels
         mock_get_text.side_effect = [
             "Select language:",  # language_selection
-            "Choice: ",          # menu_choice
-            "Cancelled"          # cancelled
+            "Choice: ",  # menu_choice
+            "Cancelled",  # cancelled
         ]
 
         _handle_language_selection()
@@ -243,8 +270,15 @@ class TestAutoUpdateHandler:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.load_portfolio")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_auto_update_keyboard_interrupt(self, mock_print, mock_get_text, mock_load_portfolio,
-                                                  mock_analyze_portfolio, mock_sleep, mock_input):
+    def test_handle_auto_update_keyboard_interrupt(
+        self,
+        mock_print,
+        mock_get_text,
+        mock_load_portfolio,
+        mock_analyze_portfolio,
+        mock_sleep,
+        mock_input,
+    ):
         """Test _handle_auto_update with KeyboardInterrupt."""
         test_df = pd.DataFrame({"symbol": ["BTC"], "amount": [1.0]})
         mock_load_portfolio.return_value = test_df
@@ -252,7 +286,7 @@ class TestAutoUpdateHandler:
         mock_get_text.side_effect = [
             "Enter interval in minutes:",  # interval_minutes
             "Press Ctrl+C to stop auto-update.",  # auto_update_stop
-            "Auto-update stopped."  # auto_update_stopped
+            "Auto-update stopped.",  # auto_update_stopped
         ]
         # Simulate KeyboardInterrupt after first analysis
         mock_sleep.side_effect = KeyboardInterrupt()
@@ -273,19 +307,21 @@ class TestSettingsHandler:
     @patch("crypto_invest_portfolio.CLI_portfolio_app._handle_language_selection")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_settings_language_choice(self, mock_print, mock_get_text, mock_handle_language_selection, mock_input):
+    def test_handle_settings_language_choice(
+        self, mock_print, mock_get_text, mock_handle_language_selection, mock_input
+    ):
         """Test _handle_settings with language selection choice."""
         # First call returns "1" (language), second call returns "2" (back)
         mock_input.side_effect = ["1", "2"]
         mock_get_text.side_effect = [
-            "\nSettings",      # settings_title
-            "Language",       # settings_language
-            "Back",           # settings_back
-            "Choice: ",       # menu_choice
-            "\nSettings",     # settings_title (second iteration)
-            "Language",       # settings_language
-            "Back",           # settings_back
-            "Choice: "        # menu_choice (second iteration)
+            "\nSettings",  # settings_title
+            "Language",  # settings_language
+            "Back",  # settings_back
+            "Choice: ",  # menu_choice
+            "\nSettings",  # settings_title (second iteration)
+            "Language",  # settings_language
+            "Back",  # settings_back
+            "Choice: ",  # menu_choice (second iteration)
         ]
 
         result = _handle_settings()
@@ -300,10 +336,10 @@ class TestSettingsHandler:
         """Test _handle_settings with back choice."""
         mock_input.return_value = "2"  # Back
         mock_get_text.side_effect = [
-            "\nSettings",      # settings_title
-            "Language",       # settings_language
-            "Back",           # settings_back
-            "Choice: "        # menu_choice
+            "\nSettings",  # settings_title
+            "Language",  # settings_language
+            "Back",  # settings_back
+            "Choice: ",  # menu_choice
         ]
 
         result = _handle_settings()
@@ -318,15 +354,15 @@ class TestSettingsHandler:
         # First invalid choice, then back
         mock_input.side_effect = ["99", "2"]
         mock_get_text.side_effect = [
-            "\nSettings",      # settings_title
-            "Language",       # settings_language
-            "Back",           # settings_back
-            "Choice: ",       # menu_choice
-            "Invalid choice", # menu_invalid
-            "\nSettings",     # settings_title (second iteration)
-            "Language",       # settings_language
-            "Back",           # settings_back
-            "Choice: "        # menu_choice (second iteration)
+            "\nSettings",  # settings_title
+            "Language",  # settings_language
+            "Back",  # settings_back
+            "Choice: ",  # menu_choice
+            "Invalid choice",  # menu_invalid
+            "\nSettings",  # settings_title (second iteration)
+            "Language",  # settings_language
+            "Back",  # settings_back
+            "Choice: ",  # menu_choice (second iteration)
         ]
 
         result = _handle_settings()
@@ -341,7 +377,9 @@ class TestEdgeCases:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.load_portfolio")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_analyze_once_empty_dataframe_is_detected_correctly(self, mock_print, mock_get_text, mock_load_portfolio):
+    def test_handle_analyze_once_empty_dataframe_is_detected_correctly(
+        self, mock_print, mock_get_text, mock_load_portfolio
+    ):
         """Test that empty DataFrame detection works correctly with different empty states."""
         # Test with completely empty DataFrame
         empty_df = pd.DataFrame()
@@ -370,22 +408,21 @@ class TestEdgeCases:
 
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_supported_languages")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_current_language")
-    def test_handle_language_selection_edge_case_single_language(self, mock_get_current_language, mock_get_supported_languages):
+    def test_handle_language_selection_edge_case_single_language(
+        self, mock_get_current_language, mock_get_supported_languages
+    ):
         """Test language selection when only one language is available."""
         # Test with only one language available
         mock_get_supported_languages.return_value = [Language.FR]
         mock_get_current_language.return_value = Language.FR
 
-        with patch("builtins.input", return_value="1"), \
-             patch("crypto_invest_portfolio.CLI_portfolio_app.set_language") as mock_set_language, \
-             patch("crypto_invest_portfolio.CLI_portfolio_app.get_text") as mock_get_text, \
-             patch("builtins.print"):
-
-            mock_get_text.side_effect = [
-                "Select language:",
-                "Choice: ",
-                "Language changed to Français"
-            ]
+        with (
+            patch("builtins.input", return_value="1"),
+            patch("crypto_invest_portfolio.CLI_portfolio_app.set_language") as mock_set_language,
+            patch("crypto_invest_portfolio.CLI_portfolio_app.get_text") as mock_get_text,
+            patch("builtins.print"),
+        ):
+            mock_get_text.side_effect = ["Select language:", "Choice: ", "Language changed to Français"]
 
             _handle_language_selection()
 
@@ -396,19 +433,21 @@ class TestEdgeCases:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_current_language")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_language_selection_boundary_values(self, mock_print, mock_get_text, mock_get_current_language,
-                                                      mock_get_supported_languages, mock_input):
+    def test_handle_language_selection_boundary_values(
+        self,
+        mock_print,
+        mock_get_text,
+        mock_get_current_language,
+        mock_get_supported_languages,
+        mock_input,
+    ):
         """Test language selection with boundary values (0, negative, etc.)."""
         mock_get_supported_languages.return_value = [Language.FR, Language.EN]
         mock_get_current_language.return_value = Language.FR
 
         # Test with 0 (should be invalid)
         mock_input.return_value = "0"
-        mock_get_text.side_effect = [
-            "Select language:",
-            "Choice: ",
-            "Invalid choice"
-        ]
+        mock_get_text.side_effect = ["Select language:", "Choice: ", "Invalid choice"]
 
         _handle_language_selection()
 
@@ -420,19 +459,22 @@ class TestEdgeCases:
     @patch("crypto_invest_portfolio.CLI_portfolio_app.load_portfolio")
     @patch("crypto_invest_portfolio.CLI_portfolio_app.get_text")
     @patch("builtins.print")
-    def test_handle_auto_update_float_conversion_edge_cases(self, mock_print, mock_get_text, mock_load_portfolio,
-                                                           mock_analyze_portfolio, mock_sleep, mock_input):
+    def test_handle_auto_update_float_conversion_edge_cases(
+        self,
+        mock_print,
+        mock_get_text,
+        mock_load_portfolio,
+        mock_analyze_portfolio,
+        mock_sleep,
+        mock_input,
+    ):
         """Test auto-update with different float input formats."""
         test_df = pd.DataFrame({"symbol": ["BTC"], "amount": [1.0]})
         mock_load_portfolio.return_value = test_df
 
         # Test with decimal input
         mock_input.return_value = "0.5"  # 0.5 minutes (30 seconds)
-        mock_get_text.side_effect = [
-            "Enter interval:",
-            "Press Ctrl+C to stop",
-            "Auto-update stopped"
-        ]
+        mock_get_text.side_effect = ["Enter interval:", "Press Ctrl+C to stop", "Auto-update stopped"]
         mock_sleep.side_effect = KeyboardInterrupt()
 
         result = _handle_auto_update()

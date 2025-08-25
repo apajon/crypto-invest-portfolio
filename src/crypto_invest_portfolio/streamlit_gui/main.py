@@ -2,10 +2,8 @@
 
 import streamlit as st
 
-from crypto_invest_portfolio.analysis import analyze_portfolio, plot_coin_history
 from crypto_invest_portfolio.database import init_db
 from crypto_invest_portfolio.i18n import get_current_language, get_supported_languages, get_text, set_language
-from crypto_invest_portfolio.portfolio import load_portfolio
 from crypto_invest_portfolio.streamlit_gui.pages import analysis, portfolio_operations, settings, visualization
 
 
@@ -28,21 +26,20 @@ def create_language_selector():
     """Create language selector in sidebar."""
     with st.sidebar:
         st.title("🚀 " + get_text("menu_title"))
-        
+
         # Language selector
         languages = get_supported_languages()
         language_codes = [lang.value for lang in languages]
-        language_names = {
-            "en": "🇺🇸 English",
-            "fr": "🇫🇷 Français"
-        }
+        language_names = {"en": "🇺🇸 English", "fr": "🇫🇷 Français"}
 
         current_lang = st.selectbox(
             "🌐 Language",
             options=language_codes,
             format_func=lambda x: language_names.get(x, x),
-            index=language_codes.index(st.session_state.language) if st.session_state.language in language_codes else 0,
-            key="language_selector"
+            index=(
+                language_codes.index(st.session_state.language) if st.session_state.language in language_codes else 0
+            ),
+            key="language_selector",
         )
 
         if current_lang != st.session_state.language:
@@ -98,18 +95,31 @@ def main():
     create_language_selector()
 
     # Define pages using st.Page
-    pages = [
-        st.Page(portfolio_page, title="📊 " + get_text("menu_view_portfolio"), default=True),
-        st.Page(add_purchase_page, title="➕ " + get_text("menu_add_purchase")),
-        st.Page(add_staking_page, title="🎯 " + get_text("menu_add_staking")),
-        st.Page(edit_delete_page, title="✏️ " + get_text("menu_edit_purchase") + " / " + get_text("menu_delete_purchase")),
-        st.Page(analysis_page, title="📈 " + get_text("menu_analyze_once")),
-        st.Page(visualization_page, title="📉 " + get_text("menu_plot_coin")),
-        st.Page(settings_page, title="⚙️ " + get_text("menu_settings")),
-    ]
+    pages = {
+        get_text("streamlit_menu_portfolio"): [
+            st.Page(portfolio_page, title="📊 " + get_text("menu_view_portfolio"), default=True),
+        ],
+        get_text("streamlit_menu_add_edit"): [
+            st.Page(add_purchase_page, title="➕ " + get_text("menu_add_purchase")),  # noqa: RUF001
+            st.Page(add_staking_page, title="🎯 " + get_text("menu_add_staking")),
+            st.Page(
+                edit_delete_page,
+                title="✏️ " + get_text("menu_edit_purchase") + " / " + get_text("menu_delete_purchase"),
+            ),
+        ],
+        get_text("streamlit_menu_analysis"): [
+            st.Page(analysis_page, title="📈 " + get_text("menu_analyze_once")),
+        ],
+        get_text("streamlit_menu_visualization"): [
+            st.Page(visualization_page, title="📉 " + get_text("menu_plot_coin")),
+        ],
+        get_text("streamlit_menu_settings"): [
+            st.Page(settings_page, title="⚙️ " + get_text("menu_settings")),
+        ],
+    }
 
     # Create navigation
-    pg = st.navigation(pages)
+    pg = st.navigation(pages, position="top")
     pg.run()
 
 

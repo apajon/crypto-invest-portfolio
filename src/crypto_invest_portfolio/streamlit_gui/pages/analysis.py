@@ -2,11 +2,10 @@
 
 import time
 
-import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 
-from crypto_invest_portfolio.analysis import analyze_portfolio
+from crypto_invest_portfolio.analysis.operations import _aggregate_by_coin
 from crypto_invest_portfolio.i18n import get_text
 from crypto_invest_portfolio.portfolio import load_portfolio
 
@@ -52,24 +51,17 @@ def show_single_analysis(df: pd.DataFrame, by_wallet: bool = False):
     if st.button("🔄 " + get_text("menu_analyze_once"), type="primary"):
         with st.spinner("Analyzing portfolio..."):
             try:
-                # Create containers for output capture
-                analysis_container = st.container()
+                # Use the same analysis logic as CLI
+                df_analysis = _aggregate_by_coin(df, include_wallet=by_wallet)
+                
+                if df_analysis.empty:
+                    st.warning(get_text("empty_for_analysis"))
+                    return
 
-                with analysis_container:
-                    st.subheader("Portfolio Analysis Results")
-
-                    # Note: The analyze_portfolio function prints to console
-                    # In a real implementation, we'd need to modify it to return data
-                    # For now, we'll show a placeholder and the user will see output in console
-                    st.info("Analysis running... Check the console/terminal for detailed output.")
-
-                    # Call the analysis function
-                    analyze_portfolio(df, by_wallet=by_wallet)
-
-                    st.success("✅ Analysis completed! Check the console for detailed results.")
-
-                    # Show basic portfolio info in Streamlit
-                    show_portfolio_summary(df, by_wallet)
+                st.success("✅ Analysis completed! Check the console for detailed results.")
+                
+                # Show portfolio analysis table
+                show_portfolio_analysis_table(df_analysis, by_wallet)
 
             except Exception as e:
                 st.error(f"Error during analysis: {e!s}")
@@ -138,8 +130,9 @@ def show_auto_update_analysis(df: pd.DataFrame, by_wallet: bool = False):
                     st.write(f"**Update #{current_update}** - {time.strftime('%H:%M:%S')}")
 
                     # Run analysis
-                    analyze_portfolio(df, by_wallet=by_wallet)
-                    show_portfolio_summary(df, by_wallet)
+                    df_analysis = _aggregate_by_coin(df, include_wallet=by_wallet)
+                    if not df_analysis.empty:
+                        show_portfolio_analysis_table(df_analysis, by_wallet)
 
                     st.write(f"Next update in {interval_minutes} minutes...")
 
@@ -156,62 +149,136 @@ def show_auto_update_analysis(df: pd.DataFrame, by_wallet: bool = False):
             status_placeholder.success("✅ Auto-update completed.")
 
 
-def show_portfolio_summary(df: pd.DataFrame, by_wallet: bool = False):
-    """Show a summary of the portfolio in Streamlit."""
+def show_portfolio_analysis_table(df_analysis: pd.DataFrame, by_wallet: bool = False):
+    """Display the portfolio analysis table with color coding like CLI."""
     try:
-        st.subheader("📊 Portfolio Summary")
+        st.subheader("📊 Portfolio Analysis Results")
 
-        if by_wallet and 'wallet' in df.columns:
-            # Group by wallet
-            wallet_summary = df.groupby('wallet').agg({
-                'amount': 'sum',
-                'coin': 'count',
-                'symbol': lambda x: ', '.join(x.unique())
-            }).round(4)
-
-            wallet_summary.columns = ['Total Amount', 'Number of Purchases', 'Coins']
-            st.dataframe(wallet_summary, use_container_width=True)
-
+        # Prepare the table columns based on by_wallet flag
+        if by_wallet:
+            columns_to_show = [
+                "Wallet",
+                "Coin", 
+                "Amount",
+                "Avg Buy Price CAD",
+                "Current Price CAD", 
+                "Invested Value CAD (incl. frais)",
+                "Current Value CAD (net)",
+                "% Change Net"
+            ]
         else:
-            # Overall summary
-            col1, col2, col3, col4 = st.columns(4)
+            columns_to_show = [
+                "Coin",
+                "Amount", 
+                "Avg Buy Price CAD",
+                "Current Price CAD",
+                "Invested Value CAD (incl. frais)",
+                "Current Value CAD (net)", 
+                "% Change Net"
+            ]
 
-            with col1:
-                total_purchases = len(df)
-                st.metric("Total Purchases", total_purchases)
+        # Filter to available columns
+        available_cols = [c for c in columns_to_show if c in df_analysis.columns]
+        
+        if not available_cols:
+            st.warning("No data columns available for display.")
+            return
 
-            with col2:
-                unique_coins = df['symbol'].nunique() if 'symbol' in df.columns else 0
-                st.metric("Unique Coins", unique_coins)
-
-            with col3:
-                if 'wallet' in df.columns:
-                    unique_wallets = df['wallet'].nunique()
-                    st.metric("Wallets", unique_wallets)
-
-            with col4:
-                if 'amount' in df.columns:
-                    total_amount = df['amount'].sum()
-                    st.metric("Total Amount", f"{total_amount:.4f}")
-
-            # Top coins by amount
-            if 'symbol' in df.columns and 'amount' in df.columns:
-                st.subheader("Top Coins by Amount")
-                top_coins = df.groupby('symbol')['amount'].sum().sort_values(ascending=False).head(10)
-                st.bar_chart(top_coins)
-
-            # Portfolio composition
-            if 'type' in df.columns:
-                st.subheader("Portfolio by Type")
-                type_composition = df.groupby('type')['amount'].sum()
-                if len(type_composition) > 0:
-                    fig_type, ax_type = plt.subplots(figsize=(8, 6))
-                    ax_type.pie(type_composition.values, labels=type_composition.index, autopct='%1.1f%%')
-                    ax_type.set_title("Portfolio Distribution by Type")
-                    st.pyplot(fig_type)
-                    plt.close(fig_type)
+        # Create a styled dataframe for display
+        df_display = df_analysis[available_cols].copy()
+        
+        # Format numeric columns
+        numeric_format_cols = {
+            "Amount": "{:.8f}",
+            "Avg Buy Price CAD": "{:.6f}", 
+            "Current Price CAD": "{:.2f}",
+            "Invested Value CAD (incl. frais)": "{:.2f}",
+            "Current Value CAD (net)": "{:.2f}",
+            "% Change Net": "{:.2f}%"
+        }
+        
+        for col, fmt in numeric_format_cols.items():
+            if col in df_display.columns:
+                if col == "% Change Net":
+                    df_display[col] = df_display[col].apply(lambda x: f"{x:.2f}%")
                 else:
-                    st.info("No type data available for pie chart.")
+                    df_display[col] = df_display[col].apply(lambda x: fmt.format(x))
+
+        # Apply color styling to % Change Net column using Streamlit's style API
+        def color_pct_change(val):
+            """Color the percentage change column."""
+            if pd.isna(val):
+                return ""
+            # Extract numeric value from formatted string
+            try:
+                numeric_val = float(val.replace('%', ''))
+                if numeric_val > 0:
+                    return "color: green"
+                elif numeric_val < 0:
+                    return "color: red"
+                else:
+                    return "color: black"
+            except:
+                return ""
+
+        # Style the dataframe
+        if "% Change Net" in df_display.columns:
+            styled_df = df_display.style.applymap(
+                color_pct_change, 
+                subset=["% Change Net"]
+            )
+        else:
+            styled_df = df_display
+
+        # Display the table
+        st.dataframe(styled_df, use_container_width=True, hide_index=True)
+
+        # Show portfolio summary metrics
+        show_portfolio_metrics(df_analysis)
 
     except Exception as e:
-        st.error(f"Error creating portfolio summary: {e!s}")
+        st.error(f"Error creating analysis table: {e!s}")
+
+
+def show_portfolio_metrics(df_analysis: pd.DataFrame):
+    """Show key portfolio metrics."""
+    try:
+        if df_analysis.empty:
+            return
+
+        st.subheader("📈 Portfolio Metrics")
+        
+        col1, col2, col3, col4 = st.columns(4)
+        
+        with col1:
+            total_invested = df_analysis["Invested Value CAD (incl. frais)"].sum()
+            st.metric("Total Invested", f"${total_invested:,.2f} CAD")
+        
+        with col2:
+            total_current = df_analysis["Current Value CAD (net)"].sum()
+            st.metric("Total Current Value", f"${total_current:,.2f} CAD")
+        
+        with col3:
+            total_change = total_current - total_invested
+            st.metric("Total P&L", f"${total_change:,.2f} CAD")
+        
+        with col4:
+            total_pct_change = (total_change / total_invested * 100) if total_invested > 0 else 0
+            color = "normal" if total_pct_change >= 0 else "inverse"
+            st.metric("Total % Change", f"{total_pct_change:.2f}%")
+
+        # Show breakdown by type if available
+        if "Type" in df_analysis.columns:
+            st.subheader("📊 Portfolio by Type")
+            type_summary = df_analysis.groupby("Type").agg({
+                "Invested Value CAD (incl. frais)": "sum",
+                "Current Value CAD (net)": "sum"
+            }).round(2)
+            
+            type_summary["P&L"] = type_summary["Current Value CAD (net)"] - type_summary["Invested Value CAD (incl. frais)"]
+            type_summary["% Change"] = (type_summary["P&L"] / type_summary["Invested Value CAD (incl. frais)"] * 100).round(2)
+            
+            st.dataframe(type_summary, use_container_width=True)
+
+    except Exception as e:
+        st.error(f"Error creating portfolio metrics: {e!s}")

@@ -42,6 +42,21 @@ def get_coin_suggestions():
         return []
 
 
+def get_wallet_suggestions():
+    """Get existing wallet names from the portfolio database for autocomplete."""
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+
+        c.execute("SELECT DISTINCT wallet FROM portfolio WHERE wallet IS NOT NULL AND wallet != ''")
+        wallets = [row[0] for row in c.fetchall()]
+
+        conn.close()
+        return sorted(wallets)
+    except Exception:
+        return []
+
+
 def show_portfolio_view():
     """Display the portfolio overview."""
     st.header("📊 " + get_text("menu_view_portfolio"))
@@ -99,6 +114,7 @@ def show_add_purchase():
     # Get separate autocomplete suggestions
     symbol_suggestions = get_symbol_suggestions()
     coin_suggestions = get_coin_suggestions()
+    wallet_suggestions = get_wallet_suggestions()
 
     with st.form("add_purchase_form"):
         col1, col2 = st.columns(2)
@@ -138,7 +154,17 @@ def show_add_purchase():
             )
             type_options = [t.value for t in CoinType]
             type_ = st.selectbox(get_text("coin_type"), type_options, index=0)
-            wallet = st.text_input(get_text("wallet"), help="e.g., kraken, binance, exodus")
+            
+            # Wallet field with streamlit-tags
+            wallet_tags = st_tags(
+                label=get_text("wallet"),
+                text="Enter wallet (e.g., kraken, binance)",
+                value=[],
+                suggestions=wallet_suggestions,
+                maxtags=1,  # Single tag selection
+                key="wallet_input",
+            )
+            wallet = wallet_tags[0] if wallet_tags else ""
 
         submitted = st.form_submit_button("💾 " + get_text("add_purchase"))
 
@@ -174,6 +200,7 @@ def show_add_staking():
     # Get separate autocomplete suggestions
     symbol_suggestions = get_symbol_suggestions()
     coin_suggestions = get_coin_suggestions()
+    wallet_suggestions = get_wallet_suggestions()
 
     with st.form("add_staking_form"):
         col1, col2 = st.columns(2)
@@ -206,7 +233,17 @@ def show_add_staking():
         with col2:
             type_options = [t.value for t in CoinType]
             type_ = st.selectbox(get_text("coin_type"), type_options, index=0)
-            wallet = st.text_input(get_text("wallet"), help="e.g., kraken, binance, exodus")
+            
+            # Wallet field with streamlit-tags
+            wallet_tags = st_tags(
+                label=get_text("wallet"),
+                text="Enter wallet (e.g., kraken, binance)",
+                value=[],
+                suggestions=wallet_suggestions,
+                maxtags=1,  # Single tag selection
+                key="staking_wallet_input",
+            )
+            wallet = wallet_tags[0] if wallet_tags else ""
 
         submitted = st.form_submit_button("💰 " + "Add Staking Gain")
 
@@ -275,6 +312,7 @@ def show_edit_delete():
                     # Get separate autocomplete suggestions for edit form
                     symbol_suggestions = get_symbol_suggestions()
                     coin_suggestions = get_coin_suggestions()
+                    wallet_suggestions = get_wallet_suggestions()
 
                     with st.form("edit_purchase_form"):
                         # Symbol field first (before Coin Name) with streamlit-tags
@@ -331,7 +369,16 @@ def show_edit_delete():
                         type_index = type_options.index(current_type) if current_type in type_options else 0
                         type_ = st.selectbox("Type", type_options, index=type_index)
 
-                        wallet = st.text_input("Wallet", value=row.get("wallet", ""))
+                        # Wallet field with streamlit-tags
+                        wallet_tags = st_tags(
+                            label="Wallet",
+                            text="Enter wallet",
+                            value=[row.get("wallet", "")] if row.get("wallet") else [],
+                            suggestions=wallet_suggestions,
+                            maxtags=1,  # Single tag selection
+                            key="edit_wallet_input",
+                        )
+                        wallet = wallet_tags[0] if wallet_tags else ""
 
                         edit_submitted = st.form_submit_button("💾 Update Purchase")
 

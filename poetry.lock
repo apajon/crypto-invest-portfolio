@@ -5,7 +5,7 @@ name = "altair"
 version = "5.5.0"
 description = "Vega-Altair: A declarative statistical visualization library for Python."
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.12"
 groups = ["main"]
 files = [
     {file = "altair-5.5.0-py3-none-any.whl", hash = "sha256:91a310b926508d560fe0148d02a194f38b824122641ef528113d029fcd129f8c"},

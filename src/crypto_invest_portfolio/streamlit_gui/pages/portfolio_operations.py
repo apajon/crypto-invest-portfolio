@@ -3,11 +3,34 @@
 import sqlite3
 
 import streamlit as st
+from streamlit_tags import st_tags
 
 from crypto_invest_portfolio.constants.config import DB_FILE
 from crypto_invest_portfolio.constants.enums import CoinType
 from crypto_invest_portfolio.i18n import get_text
 from crypto_invest_portfolio.portfolio import load_portfolio
+
+
+def get_portfolio_suggestions():
+    """Get existing symbols and coin names from the portfolio database for autocomplete."""
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
+        
+        # Get unique symbols and coin names
+        c.execute("SELECT DISTINCT symbol FROM portfolio WHERE symbol IS NOT NULL AND symbol != ''")
+        symbols = [row[0] for row in c.fetchall()]
+        
+        c.execute("SELECT DISTINCT coin FROM portfolio WHERE coin IS NOT NULL AND coin != ''")
+        coins = [row[0] for row in c.fetchall()]
+        
+        conn.close()
+        
+        # Combine and deduplicate
+        suggestions = list(set(symbols + coins))
+        return sorted(suggestions)
+    except Exception:
+        return []
 
 
 def show_portfolio_view():
@@ -64,12 +87,35 @@ def show_add_purchase():
     """Display the add purchase form."""
     st.header("➕ " + get_text("menu_add_purchase"))  # noqa: RUF001
 
+    # Get autocomplete suggestions
+    suggestions = get_portfolio_suggestions()
+
     with st.form("add_purchase_form"):
         col1, col2 = st.columns(2)
 
         with col1:
-            coin = st.text_input(get_text("coin_name"), help="e.g., Bitcoin")
-            symbol = st.text_input(get_text("coin_symbol"), help="e.g., BTC").upper()
+            # Symbol field first (before Coin Name) with streamlit-tags
+            symbol_tags = st_tags(
+                label=get_text("coin_symbol"),
+                text="Enter symbol (e.g., BTC)",
+                value=[],
+                suggestions=suggestions,
+                maxtags=1,  # Single tag selection
+                key="symbol_input"
+            )
+            symbol = symbol_tags[0].upper() if symbol_tags else ""
+            
+            # Coin Name field with streamlit-tags  
+            coin_tags = st_tags(
+                label=get_text("coin_name"),
+                text="Enter coin name (e.g., Bitcoin)",
+                value=[],
+                suggestions=suggestions,
+                maxtags=1,  # Single tag selection
+                key="coin_input"
+            )
+            coin = coin_tags[0] if coin_tags else ""
+            
             amount = st.number_input(get_text("amount"), min_value=0.0, step=0.0001, format="%.8f")
             buy_price_cad = st.number_input(get_text("buy_price_cad"), min_value=0.0, step=0.01, format="%.2f")
 
@@ -115,12 +161,35 @@ def show_add_staking():
     """Display the add staking gain form."""
     st.header("🎯 " + get_text("menu_add_staking"))
 
+    # Get autocomplete suggestions
+    suggestions = get_portfolio_suggestions()
+
     with st.form("add_staking_form"):
         col1, col2 = st.columns(2)
 
         with col1:
-            coin = st.text_input(get_text("coin_name"), help="e.g., Ethereum")
-            symbol = st.text_input(get_text("coin_symbol"), help="e.g., ETH").upper()
+            # Symbol field first (before Coin Name) with streamlit-tags
+            symbol_tags = st_tags(
+                label=get_text("coin_symbol"),
+                text="Enter symbol (e.g., ETH)",
+                value=[],
+                suggestions=suggestions,
+                maxtags=1,  # Single tag selection
+                key="staking_symbol_input"
+            )
+            symbol = symbol_tags[0].upper() if symbol_tags else ""
+            
+            # Coin Name field with streamlit-tags  
+            coin_tags = st_tags(
+                label=get_text("coin_name"),
+                text="Enter coin name (e.g., Ethereum)",
+                value=[],
+                suggestions=suggestions,
+                maxtags=1,  # Single tag selection
+                key="staking_coin_input"
+            )
+            coin = coin_tags[0] if coin_tags else ""
+            
             amount = st.number_input(get_text("amount"), min_value=0.0, step=0.0001, format="%.8f")
 
         with col2:
@@ -192,9 +261,32 @@ def show_edit_delete():
                 with col1:
                     st.subheader("✏️ Edit Purchase")
 
+                    # Get autocomplete suggestions for edit form
+                    suggestions = get_portfolio_suggestions()
+
                     with st.form("edit_purchase_form"):
-                        coin = st.text_input("Coin Name", value=row.get("coin", ""))
-                        symbol = st.text_input("Symbol", value=row.get("symbol", "")).upper()
+                        # Symbol field first (before Coin Name) with streamlit-tags
+                        symbol_tags = st_tags(
+                            label="Symbol",
+                            text="Enter symbol",
+                            value=[row.get("symbol", "")] if row.get("symbol") else [],
+                            suggestions=suggestions,
+                            maxtags=1,  # Single tag selection
+                            key="edit_symbol_input"
+                        )
+                        symbol = symbol_tags[0].upper() if symbol_tags else ""
+                        
+                        # Coin Name field with streamlit-tags  
+                        coin_tags = st_tags(
+                            label="Coin Name",
+                            text="Enter coin name",
+                            value=[row.get("coin", "")] if row.get("coin") else [],
+                            suggestions=suggestions,
+                            maxtags=1,  # Single tag selection
+                            key="edit_coin_input"
+                        )
+                        coin = coin_tags[0] if coin_tags else ""
+                        
                         amount = st.number_input(
                             "Amount", value=float(row.get("amount", 0)), min_value=0.0, step=0.0001, format="%.8f"
                         )

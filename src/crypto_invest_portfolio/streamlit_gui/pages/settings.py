@@ -6,6 +6,7 @@ import sqlite3
 import streamlit as st
 
 from crypto_invest_portfolio.constants.config import DB_FILE
+from crypto_invest_portfolio.constants.enums import Language
 from crypto_invest_portfolio.i18n import get_current_language, get_supported_languages, get_text, set_language
 
 
@@ -52,7 +53,7 @@ def show_language_settings():
 
         if st.button("🔄 Apply Language Change"):
             if new_language != current_lang:
-                set_language(new_language)
+                set_language(Language(new_language))
                 st.success(f"Language changed to {language_names.get(new_language, new_language)}")
                 st.info("Page will reload to apply changes...")
                 st.rerun()

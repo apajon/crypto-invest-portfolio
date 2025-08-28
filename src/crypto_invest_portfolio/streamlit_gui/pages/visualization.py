@@ -138,7 +138,7 @@ def _show_portfolio_charts_symbol(df: pd.DataFrame, need_summary_data=False):
         with col1:
             st.write("**Pie Chart**")
             fig_pie, ax_pie = plt.subplots(figsize=(8, 6))
-            ax_pie.pie(coin_amounts.values, labels=coin_amounts.index, autopct="%1.1f%%")
+            ax_pie.pie(coin_amounts.values, labels=coin_amounts.index.tolist(), autopct="%1.1f%%")
             ax_pie.set_title("Portfolio Distribution by Coin")
             st.pyplot(fig_pie)
             plt.close(fig_pie)
@@ -218,7 +218,7 @@ def _show_portfolio_charts_type(df: pd.DataFrame):
         with col1:
             st.write("**Type Distribution**")
             fig_type, ax_type = plt.subplots(figsize=(8, 6))
-            ax_type.pie(type_amounts.values, labels=type_amounts.index, autopct="%1.1f%%")
+            ax_type.pie(type_amounts.values, labels=type_amounts.index.tolist(), autopct="%1.1f%%")
             ax_type.set_title("Portfolio Distribution by Type")
             st.pyplot(fig_type)
             plt.close(fig_type)
@@ -247,7 +247,7 @@ def _show_portfolio_charts_wallet(df: pd.DataFrame):
     with col1:
         st.write("**Wallet Distribution**")
         fig_wallet, ax_wallet = plt.subplots(figsize=(8, 6))
-        ax_wallet.pie(wallet_amounts.values, labels=wallet_amounts.index, autopct="%1.1f%%")
+        ax_wallet.pie(wallet_amounts.values, labels=wallet_amounts.index.tolist(), autopct="%1.1f%%")
         ax_wallet.set_title("Portfolio Distribution by Wallet")
         st.pyplot(fig_wallet)
         plt.close(fig_wallet)

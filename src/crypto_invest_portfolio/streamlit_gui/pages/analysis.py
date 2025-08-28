@@ -429,7 +429,7 @@ def _style_dataframe(df_display: pd.DataFrame) -> pd.io.formats.style.Styler | p
             return ""
 
     if "% Change Net" in df_display.columns:
-        return df_display.style.applymap(color_pct_change, subset=["% Change Net"])
+        return df_display.style.map(color_pct_change, subset=["% Change Net"])
     return df_display
 
 

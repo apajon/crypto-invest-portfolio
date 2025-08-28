@@ -2,6 +2,7 @@
 
 import streamlit as st
 
+from crypto_invest_portfolio.constants.enums import Language
 from crypto_invest_portfolio.database import init_db
 from crypto_invest_portfolio.i18n import get_current_language, get_supported_languages, get_text, set_language
 from crypto_invest_portfolio.streamlit_gui.pages import analysis, portfolio_operations, settings, visualization
@@ -43,7 +44,7 @@ def create_language_selector():
         )
 
         if current_lang != st.session_state.language:
-            set_language(current_lang)
+            set_language(Language(current_lang))
             st.session_state.language = current_lang
             st.rerun()
 

@@ -1,6 +1,9 @@
 """Portfolio analysis page for performance metrics and insights."""
 
+from __future__ import annotations
+
 import time
+from typing import TYPE_CHECKING
 
 import pandas as pd
 import streamlit as st
@@ -8,6 +11,10 @@ import streamlit as st
 from crypto_invest_portfolio.analysis.operations import _aggregate_by_coin
 from crypto_invest_portfolio.i18n import get_text
 from crypto_invest_portfolio.portfolio import load_portfolio
+
+if TYPE_CHECKING:
+    # Typed-only import to avoid runtime access to pandas internals
+    from pandas.io.formats.style import Styler
 
 
 def show_analysis():
@@ -411,7 +418,7 @@ def show_portfolio_analysis_table(df_analysis: pd.DataFrame, by_wallet: bool = F
         st.error(f"Error creating analysis table: {e!s}")
 
 
-def _style_dataframe(df_display: pd.DataFrame) -> pd.io.formats.style.Styler | pd.DataFrame:
+def _style_dataframe(df_display: pd.DataFrame) -> Styler | pd.DataFrame:
     """Apply color styling to the dataframe."""
 
     def color_pct_change(val):

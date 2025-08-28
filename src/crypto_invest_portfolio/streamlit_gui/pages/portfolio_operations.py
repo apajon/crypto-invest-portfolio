@@ -11,24 +11,32 @@ from crypto_invest_portfolio.i18n import get_text
 from crypto_invest_portfolio.portfolio import load_portfolio
 
 
-def get_portfolio_suggestions():
-    """Get existing symbols and coin names from the portfolio database for autocomplete."""
+def get_symbol_suggestions():
+    """Get existing symbols from the portfolio database for autocomplete."""
     try:
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
         
-        # Get unique symbols and coin names
         c.execute("SELECT DISTINCT symbol FROM portfolio WHERE symbol IS NOT NULL AND symbol != ''")
         symbols = [row[0] for row in c.fetchall()]
+        
+        conn.close()
+        return sorted(symbols)
+    except Exception:
+        return []
+
+
+def get_coin_suggestions():
+    """Get existing coin names from the portfolio database for autocomplete."""
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        c = conn.cursor()
         
         c.execute("SELECT DISTINCT coin FROM portfolio WHERE coin IS NOT NULL AND coin != ''")
         coins = [row[0] for row in c.fetchall()]
         
         conn.close()
-        
-        # Combine and deduplicate
-        suggestions = list(set(symbols + coins))
-        return sorted(suggestions)
+        return sorted(coins)
     except Exception:
         return []
 
@@ -87,8 +95,9 @@ def show_add_purchase():
     """Display the add purchase form."""
     st.header("➕ " + get_text("menu_add_purchase"))  # noqa: RUF001
 
-    # Get autocomplete suggestions
-    suggestions = get_portfolio_suggestions()
+    # Get separate autocomplete suggestions
+    symbol_suggestions = get_symbol_suggestions()
+    coin_suggestions = get_coin_suggestions()
 
     with st.form("add_purchase_form"):
         col1, col2 = st.columns(2)
@@ -99,7 +108,7 @@ def show_add_purchase():
                 label=get_text("coin_symbol"),
                 text="Enter symbol (e.g., BTC)",
                 value=[],
-                suggestions=suggestions,
+                suggestions=symbol_suggestions,
                 maxtags=1,  # Single tag selection
                 key="symbol_input"
             )
@@ -110,7 +119,7 @@ def show_add_purchase():
                 label=get_text("coin_name"),
                 text="Enter coin name (e.g., Bitcoin)",
                 value=[],
-                suggestions=suggestions,
+                suggestions=coin_suggestions,
                 maxtags=1,  # Single tag selection
                 key="coin_input"
             )
@@ -161,8 +170,9 @@ def show_add_staking():
     """Display the add staking gain form."""
     st.header("🎯 " + get_text("menu_add_staking"))
 
-    # Get autocomplete suggestions
-    suggestions = get_portfolio_suggestions()
+    # Get separate autocomplete suggestions
+    symbol_suggestions = get_symbol_suggestions()
+    coin_suggestions = get_coin_suggestions()
 
     with st.form("add_staking_form"):
         col1, col2 = st.columns(2)
@@ -173,7 +183,7 @@ def show_add_staking():
                 label=get_text("coin_symbol"),
                 text="Enter symbol (e.g., ETH)",
                 value=[],
-                suggestions=suggestions,
+                suggestions=symbol_suggestions,
                 maxtags=1,  # Single tag selection
                 key="staking_symbol_input"
             )
@@ -184,7 +194,7 @@ def show_add_staking():
                 label=get_text("coin_name"),
                 text="Enter coin name (e.g., Ethereum)",
                 value=[],
-                suggestions=suggestions,
+                suggestions=coin_suggestions,
                 maxtags=1,  # Single tag selection
                 key="staking_coin_input"
             )
@@ -261,8 +271,9 @@ def show_edit_delete():
                 with col1:
                     st.subheader("✏️ Edit Purchase")
 
-                    # Get autocomplete suggestions for edit form
-                    suggestions = get_portfolio_suggestions()
+                    # Get separate autocomplete suggestions for edit form
+                    symbol_suggestions = get_symbol_suggestions()
+                    coin_suggestions = get_coin_suggestions()
 
                     with st.form("edit_purchase_form"):
                         # Symbol field first (before Coin Name) with streamlit-tags
@@ -270,7 +281,7 @@ def show_edit_delete():
                             label="Symbol",
                             text="Enter symbol",
                             value=[row.get("symbol", "")] if row.get("symbol") else [],
-                            suggestions=suggestions,
+                            suggestions=symbol_suggestions,
                             maxtags=1,  # Single tag selection
                             key="edit_symbol_input"
                         )
@@ -281,7 +292,7 @@ def show_edit_delete():
                             label="Coin Name",
                             text="Enter coin name",
                             value=[row.get("coin", "")] if row.get("coin") else [],
-                            suggestions=suggestions,
+                            suggestions=coin_suggestions,
                             maxtags=1,  # Single tag selection
                             key="edit_coin_input"
                         )

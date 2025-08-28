@@ -16,10 +16,11 @@ def get_symbol_suggestions():
     try:
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
-        
+
+        # Get unique symbols and coin names
         c.execute("SELECT DISTINCT symbol FROM portfolio WHERE symbol IS NOT NULL AND symbol != ''")
         symbols = [row[0] for row in c.fetchall()]
-        
+
         conn.close()
         return sorted(symbols)
     except Exception:
@@ -31,10 +32,10 @@ def get_coin_suggestions():
     try:
         conn = sqlite3.connect(DB_FILE)
         c = conn.cursor()
-        
+
         c.execute("SELECT DISTINCT coin FROM portfolio WHERE coin IS NOT NULL AND coin != ''")
         coins = [row[0] for row in c.fetchall()]
-        
+
         conn.close()
         return sorted(coins)
     except Exception:
@@ -110,21 +111,21 @@ def show_add_purchase():
                 value=[],
                 suggestions=symbol_suggestions,
                 maxtags=1,  # Single tag selection
-                key="symbol_input"
+                key="symbol_input",
             )
             symbol = symbol_tags[0].upper() if symbol_tags else ""
-            
-            # Coin Name field with streamlit-tags  
+
+            # Coin Name field with streamlit-tags
             coin_tags = st_tags(
                 label=get_text("coin_name"),
                 text="Enter coin name (e.g., Bitcoin)",
                 value=[],
                 suggestions=coin_suggestions,
                 maxtags=1,  # Single tag selection
-                key="coin_input"
+                key="coin_input",
             )
             coin = coin_tags[0] if coin_tags else ""
-            
+
             amount = st.number_input(get_text("amount"), min_value=0.0, step=0.0001, format="%.8f")
             buy_price_cad = st.number_input(get_text("buy_price_cad"), min_value=0.0, step=0.01, format="%.2f")
 
@@ -185,21 +186,21 @@ def show_add_staking():
                 value=[],
                 suggestions=symbol_suggestions,
                 maxtags=1,  # Single tag selection
-                key="staking_symbol_input"
+                key="staking_symbol_input",
             )
             symbol = symbol_tags[0].upper() if symbol_tags else ""
-            
-            # Coin Name field with streamlit-tags  
+
+            # Coin Name field with streamlit-tags
             coin_tags = st_tags(
                 label=get_text("coin_name"),
                 text="Enter coin name (e.g., Ethereum)",
                 value=[],
                 suggestions=coin_suggestions,
                 maxtags=1,  # Single tag selection
-                key="staking_coin_input"
+                key="staking_coin_input",
             )
             coin = coin_tags[0] if coin_tags else ""
-            
+
             amount = st.number_input(get_text("amount"), min_value=0.0, step=0.0001, format="%.8f")
 
         with col2:
@@ -283,21 +284,21 @@ def show_edit_delete():
                             value=[row.get("symbol", "")] if row.get("symbol") else [],
                             suggestions=symbol_suggestions,
                             maxtags=1,  # Single tag selection
-                            key="edit_symbol_input"
+                            key="edit_symbol_input",
                         )
                         symbol = symbol_tags[0].upper() if symbol_tags else ""
-                        
-                        # Coin Name field with streamlit-tags  
+
+                        # Coin Name field with streamlit-tags
                         coin_tags = st_tags(
                             label="Coin Name",
                             text="Enter coin name",
                             value=[row.get("coin", "")] if row.get("coin") else [],
                             suggestions=coin_suggestions,
                             maxtags=1,  # Single tag selection
-                            key="edit_coin_input"
+                            key="edit_coin_input",
                         )
                         coin = coin_tags[0] if coin_tags else ""
-                        
+
                         amount = st.number_input(
                             "Amount", value=float(row.get("amount", 0)), min_value=0.0, step=0.0001, format="%.8f"
                         )

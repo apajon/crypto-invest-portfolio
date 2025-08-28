@@ -83,12 +83,12 @@ poetry run crypto-portfolio
    ```
 
 3. **Run the application**:
-   
+
    **Web GUI**:
    ```bash
    poetry run python scripts/run_gui.py
    ```
-   
+
    **CLI**:
    ```bash
    poetry run crypto-portfolio

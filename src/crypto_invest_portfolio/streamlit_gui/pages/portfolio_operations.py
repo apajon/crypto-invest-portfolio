@@ -28,16 +28,16 @@ def show_portfolio_view():
                 st.metric("Total Coins", len(df))
 
             with col2:
-                total_amount = df['amount'].sum() if 'amount' in df.columns else 0
+                total_amount = df["amount"].sum() if "amount" in df.columns else 0
                 st.metric("Total Amount", f"{total_amount:.2f}")
 
             with col3:
-                unique_coins = df['coin'].nunique() if 'coin' in df.columns else 0
+                unique_coins = df["coin"].nunique() if "coin" in df.columns else 0
                 st.metric("Unique Coins", unique_coins)
 
             with col4:
-                if 'wallet' in df.columns:
-                    unique_wallets = df['wallet'].nunique()
+                if "wallet" in df.columns:
+                    unique_wallets = df["wallet"].nunique()
                     st.metric("Wallets", unique_wallets)
 
             st.divider()
@@ -47,13 +47,13 @@ def show_portfolio_view():
             st.dataframe(df, use_container_width=True)
 
             # Filter by wallet if wallets exist
-            if 'wallet' in df.columns and len(df['wallet'].unique()) > 1:
+            if "wallet" in df.columns and len(df["wallet"].unique()) > 1:
                 st.subheader("Filter by Wallet")
-                wallets = ["All", *sorted(df['wallet'].unique().tolist())]
+                wallets = ["All", *sorted(df["wallet"].unique().tolist())]
                 selected_wallet = st.selectbox("Select Wallet", wallets)
 
                 if selected_wallet != "All":
-                    filtered_df = df[df['wallet'] == selected_wallet]
+                    filtered_df = df[df["wallet"] == selected_wallet]
                     st.dataframe(filtered_df, use_container_width=True)
 
     except Exception as e:
@@ -62,7 +62,7 @@ def show_portfolio_view():
 
 def show_add_purchase():
     """Display the add purchase form."""
-    st.header("➕ " + get_text("menu_add_purchase"))
+    st.header("➕ " + get_text("menu_add_purchase"))  # noqa: RUF001
 
     with st.form("add_purchase_form"):
         col1, col2 = st.columns(2)
@@ -74,8 +74,12 @@ def show_add_purchase():
             buy_price_cad = st.number_input(get_text("buy_price_cad"), min_value=0.0, step=0.01, format="%.2f")
 
         with col2:
-            fee_buy_percent = st.number_input(get_text("buy_fee_percent"), min_value=0.0, max_value=100.0, step=0.01, format="%.2f")
-            fee_sell_percent = st.number_input(get_text("sell_fee_percent"), min_value=0.0, max_value=100.0, step=0.01, format="%.2f")
+            fee_buy_percent = st.number_input(
+                get_text("buy_fee_percent"), min_value=0.0, max_value=100.0, step=0.01, format="%.2f"
+            )
+            fee_sell_percent = st.number_input(
+                get_text("sell_fee_percent"), min_value=0.0, max_value=100.0, step=0.01, format="%.2f"
+            )
             type_options = [t.value for t in CoinType]
             type_ = st.selectbox(get_text("coin_type"), type_options, index=0)
             wallet = st.text_input(get_text("wallet"), help="e.g., kraken, binance, exodus")
@@ -167,16 +171,16 @@ def show_edit_delete():
 
         # Create a readable display of purchases
         display_df = df.copy()
-        if 'id' in display_df.columns:
-            display_df['Display'] = display_df.apply(
+        if "id" in display_df.columns:
+            display_df["Display"] = display_df.apply(
                 lambda row: f"ID {row['id']}: {row.get('symbol', 'N/A')} - {row.get('amount', 0):.4f} @ {row.get('buy_price_cad', 0):.2f} CAD ({row.get('wallet', 'N/A')})",
-                axis=1
+                axis=1,
             )
 
             selected_row = st.selectbox(
                 "Choose purchase to edit/delete:",
                 options=range(len(display_df)),
-                format_func=lambda i: display_df.iloc[i]['Display']
+                format_func=lambda i: display_df.iloc[i]["Display"],
             )
 
             if selected_row is not None:
@@ -189,19 +193,41 @@ def show_edit_delete():
                     st.subheader("✏️ Edit Purchase")
 
                     with st.form("edit_purchase_form"):
-                        coin = st.text_input("Coin Name", value=row.get('coin', ''))
-                        symbol = st.text_input("Symbol", value=row.get('symbol', '')).upper()
-                        amount = st.number_input("Amount", value=float(row.get('amount', 0)), min_value=0.0, step=0.0001, format="%.8f")
-                        buy_price_cad = st.number_input("Buy Price (CAD)", value=float(row.get('buy_price_cad', 0)), min_value=0.0, step=0.01, format="%.2f")
-                        fee_buy_percent = st.number_input("Buy Fee (%)", value=float(row.get('fee_buy_percent', 0)), min_value=0.0, max_value=100.0, step=0.01, format="%.2f")
-                        fee_sell_percent = st.number_input("Sell Fee (%)", value=float(row.get('fee_sell_percent', 0)), min_value=0.0, max_value=100.0, step=0.01, format="%.2f")
+                        coin = st.text_input("Coin Name", value=row.get("coin", ""))
+                        symbol = st.text_input("Symbol", value=row.get("symbol", "")).upper()
+                        amount = st.number_input(
+                            "Amount", value=float(row.get("amount", 0)), min_value=0.0, step=0.0001, format="%.8f"
+                        )
+                        buy_price_cad = st.number_input(
+                            "Buy Price (CAD)",
+                            value=float(row.get("buy_price_cad", 0)),
+                            min_value=0.0,
+                            step=0.01,
+                            format="%.2f",
+                        )
+                        fee_buy_percent = st.number_input(
+                            "Buy Fee (%)",
+                            value=float(row.get("fee_buy_percent", 0)),
+                            min_value=0.0,
+                            max_value=100.0,
+                            step=0.01,
+                            format="%.2f",
+                        )
+                        fee_sell_percent = st.number_input(
+                            "Sell Fee (%)",
+                            value=float(row.get("fee_sell_percent", 0)),
+                            min_value=0.0,
+                            max_value=100.0,
+                            step=0.01,
+                            format="%.2f",
+                        )
 
                         type_options = [t.value for t in CoinType]
-                        current_type = row.get('type', CoinType.CLASSIC.value)
+                        current_type = row.get("type", CoinType.CLASSIC.value)
                         type_index = type_options.index(current_type) if current_type in type_options else 0
                         type_ = st.selectbox("Type", type_options, index=type_index)
 
-                        wallet = st.text_input("Wallet", value=row.get('wallet', ''))
+                        wallet = st.text_input("Wallet", value=row.get("wallet", ""))
 
                         edit_submitted = st.form_submit_button("💾 Update Purchase")
 
@@ -215,7 +241,17 @@ def show_edit_delete():
                                     SET coin=?, symbol=?, amount=?, buy_price_cad=?, fee_buy_percent=?, fee_sell_percent=?, type=?, wallet=?
                                     WHERE id=?
                                     """,
-                                    (coin, symbol, amount, buy_price_cad, fee_buy_percent, fee_sell_percent, type_, wallet, row['id']),
+                                    (
+                                        coin,
+                                        symbol,
+                                        amount,
+                                        buy_price_cad,
+                                        fee_buy_percent,
+                                        fee_sell_percent,
+                                        type_,
+                                        wallet,
+                                        row["id"],
+                                    ),
                                 )
                                 conn.commit()
                                 conn.close()
@@ -240,7 +276,7 @@ def show_edit_delete():
                         try:
                             conn = sqlite3.connect(DB_FILE)
                             c = conn.cursor()
-                            c.execute("DELETE FROM portfolio WHERE id=?", (row['id'],))
+                            c.execute("DELETE FROM portfolio WHERE id=?", (row["id"],))
                             conn.commit()
                             conn.close()
 

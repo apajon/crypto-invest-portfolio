@@ -35,10 +35,7 @@ def show_language_settings():
     language_codes = [lang.value for lang in languages]
     current_lang = get_current_language()
 
-    language_names = {
-        "en": "🇺🇸 English",
-        "fr": "🇫🇷 Français"
-    }
+    language_names = {"en": "🇺🇸 English", "fr": "🇫🇷 Français"}
 
     col1, col2 = st.columns(2)
 
@@ -50,7 +47,7 @@ def show_language_settings():
             options=language_codes,
             format_func=lambda x: language_names.get(x, x),
             index=language_codes.index(current_lang) if current_lang in language_codes else 0,
-            key="settings_language_selector"
+            key="settings_language_selector",
         )
 
         if st.button("🔄 Apply Language Change"):
@@ -111,6 +108,7 @@ def show_database_settings():
                 st.write(f"❌ Database file not found: `{DB_FILE}`")
                 if st.button("🔄 Initialize Database"):
                     from ...database import init_db
+
                     init_db()
                     st.success("Database initialized!")
                     st.rerun()
@@ -159,13 +157,15 @@ def show_database_schema():
 
             schema_data = []
             for col in columns:
-                schema_data.append({
-                    "Column": col[1],
-                    "Type": col[2],
-                    "Not Null": "Yes" if col[3] else "No",
-                    "Default": col[4] if col[4] is not None else "None",
-                    "Primary Key": "Yes" if col[5] else "No"
-                })
+                schema_data.append(
+                    {
+                        "Column": col[1],
+                        "Type": col[2],
+                        "Not Null": "Yes" if col[3] else "No",
+                        "Default": col[4] if col[4] is not None else "None",
+                        "Primary Key": "Yes" if col[5] else "No",
+                    }
+                )
 
             st.dataframe(schema_data, use_container_width=True)
             st.write("")
@@ -188,14 +188,14 @@ def export_portfolio_data():
             return
 
         # Convert to JSON
-        json_data = df.to_json(orient='records', indent=2)
+        json_data = df.to_json(orient="records", indent=2)
 
         # Create download button
         st.download_button(
             label="📥 Download Portfolio JSON",
             data=json_data,
             file_name="portfolio_export.json",
-            mime="application/json"
+            mime="application/json",
         )
 
         st.success(f"Portfolio data ready for download ({len(df)} entries)")
@@ -219,7 +219,7 @@ def vacuum_database():
 
 def show_application_info():
     """Show application information."""
-    st.subheader("ℹ️ Application Information")
+    st.subheader("ℹ️ Application Information")  # noqa: RUF001
 
     col1, col2 = st.columns(2)
 
@@ -240,18 +240,22 @@ def show_application_info():
 
         # Python version
         import sys
+
         st.write(f"🐍 Python: {sys.version.split()[0]}")
 
         # Streamlit version
         import streamlit as st_version
+
         st.write(f"🚀 Streamlit: {st_version.__version__}")
 
         # Pandas version
         import pandas as pd
+
         st.write(f"📊 Pandas: {pd.__version__}")
 
         # Matplotlib version
         import matplotlib
+
         st.write(f"📈 Matplotlib: {matplotlib.__version__}")
 
         st.write("")

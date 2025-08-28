@@ -2,15 +2,21 @@
 
 import time
 
-from .analysis import _view_portfolio, analyze_portfolio, plot_coin_history
-from .constants.enums import Language
-from .database import init_db
-from .i18n import get_current_language, get_supported_languages, get_text, set_language
+from crypto_invest_portfolio.analysis import _view_portfolio, analyze_portfolio, plot_coin_history
+from crypto_invest_portfolio.constants.enums import Language
+from crypto_invest_portfolio.database import init_db
+from crypto_invest_portfolio.i18n import get_current_language, get_supported_languages, get_text, set_language
 
 # Import remaining functions from original that aren't yet refactored
-from .main_original import _handle_view_portfolio_one_wallet, _handle_wallet_menu
-from .portfolio import add_purchase, add_staking_gain, delete_purchase, edit_purchase, load_portfolio
-from .ui import UserCancel
+from crypto_invest_portfolio.main_original import _handle_view_portfolio_one_wallet, _handle_wallet_menu
+from crypto_invest_portfolio.portfolio import (
+    add_purchase,
+    add_staking_gain,
+    delete_purchase,
+    edit_purchase,
+    load_portfolio,
+)
+from crypto_invest_portfolio.ui import UserCancel
 
 
 def _handle_add():
